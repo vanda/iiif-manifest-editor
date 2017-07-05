@@ -25,6 +25,14 @@ export var setManifestData = (manifestData) => {
   }
 };
 
+export var setCollectionData = (collectionData) => {
+  return {
+    type: 'SET_COLLECTION_DATA',
+    collectionData
+  }
+};
+
+
 export var setManifestFilename = (manifestFilenameToSave) => {
   return {
     type: 'SET_MANIFEST_FILE_NAME',

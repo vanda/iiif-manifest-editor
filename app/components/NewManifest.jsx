@@ -39,7 +39,7 @@ var NewManifest = React.createClass({
 
     this.props.dispatch(actions.setManifestoObject(manifesto.create(JSON.stringify(emptyManifest))));
     this.props.dispatch(actions.setManifestData(emptyManifest));
-    window.location = '#/edit';  // redirect to edit manifest
+    window.location = '#/manifest/edit';  // redirect to edit manifest
   },
   render: function() {
     return false;

@@ -36,6 +36,10 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         manifestData: action.manifestData
       });
+    case 'SET_COLLECTION_DATA':
+      return Object.assign({}, state, {
+        collectionData: action.collectionData
+      });
     case 'SET_MANIFEST_FILE_NAME':
       return Object.assign({}, state, {
         manifestFilenameToSave: action.manifestFilenameToSave

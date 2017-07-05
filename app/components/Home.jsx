@@ -16,12 +16,22 @@ var Home = (props) => {
         <h2>IIIF Manifest Editor</h2>
         <div className="row">
           <div className="col-md-12">
-            <Link to="/open" className="btn btn-default"><i className="fa fa-folder-open"></i> Open Manifest</Link>
+            <Link to="/manifest/open" className="btn btn-default"><i className="fa fa-folder-open"></i> Open Manifest</Link>
           </div>
         </div>
         <div className="row">
           <div className="col-md-12">
-            <Link to="/new" className="btn btn-default"><i className="fa fa-file"></i> New Manifest</Link>
+            <Link to="/manifest/new" className="btn btn-default"><i className="fa fa-file"></i> New Manifest</Link>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <Link to="/collection/new" className="btn btn-default"><i className="fa fa-file"></i> New Collection</Link>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <Link to="/collection/edit" className="btn btn-default"><i className="fa fa-file"></i> Edit Collection</Link>
           </div>
         </div>
         <div id="bodleian-logo">

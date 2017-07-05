@@ -7,6 +7,8 @@ var Home = require('Home');
 var OpenManifest = require('OpenManifest');
 var NewManifest = require('NewManifest');
 var EditManifest = require('EditManifest');
+var NewCollection = require('NewCollection');
+var EditCollection = require('EditCollection');
 var ImportCanvases = require('ImportCanvases');
 
 var actions = require('actions');
@@ -24,10 +26,12 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path="/" component={Main}>
-        <Route path="open" component={OpenManifest} />
-        <Route path="new" component={NewManifest} />
-        <Route path="edit" component={EditManifest} />
-        <Route path="canvases" component={ImportCanvases} />
+        <Route path="/manifest/open" component={OpenManifest} />
+        <Route path="/manifest/new" component={NewManifest} />
+        <Route path="/manifest/edit" component={EditManifest} />
+        <Route path="/manifest/canvases" component={ImportCanvases} />
+        <Route path="/collection/new" component={NewCollection} />
+        <Route path="/collection/edit" component={EditCollection} />
         <IndexRoute component={Home}/>
       </Route>
     </Router>

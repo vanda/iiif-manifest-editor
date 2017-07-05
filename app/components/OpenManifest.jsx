@@ -21,7 +21,7 @@ var OpenManifest = React.createClass({
         dispatch(actions.completeManifestFetch());
         // check if valid manifestoObject was created, otherwise display error message
         if(that.props.manifestoObject) {
-          window.location = '#/edit';  // redirect to edit manifest on success
+          window.location = '#/manifest/edit';  // redirect to edit manifest on success
         } else {
           dispatch(actions.setError('FETCH_LOCAL_MANIFEST_ERROR', 'Error loading local manifest. Please select a valid manifest file.'));
         }
@@ -39,7 +39,7 @@ var OpenManifest = React.createClass({
         dispatch(actions.setManifestoObject(manifesto.create(JSON.stringify(response.data))));
         dispatch(actions.setManifestData(response.data));
         dispatch(actions.completeManifestFetch());
-        window.location = '#/edit';  // redirect to edit manifest on success
+        window.location = '#/manifest/edit';  // redirect to edit manifest on success
       })
       .catch(function(error) {
         dispatch(actions.setError('FETCH_REMOTE_MANIFEST_ERROR', 'Error loading remote manifest. Please provide a valid manifest URL.'));

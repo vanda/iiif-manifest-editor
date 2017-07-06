@@ -39,12 +39,18 @@
   },
   "dependencies": {
     "axios": "^0.11.0",
+    "bower": "^1.8.0",
     "classnames": "^2.2.5",
     "deepcopy": "^0.6.3",
     "express": "^4.13.4",
     "font-awesome": "^4.6.3",
+<<<<<<< HEAD
     "json-loader": "^0.5.4",
     "manifesto.js": "0.2.1",
+=======
+    "manifesto": "2.0.7",
+    "manifesto.js": "https://github.com/viewdir/manifesto/archive/v2.0.7.tar.gz",
+>>>>>>> Further development
     "multer": "^1.1.0",
     "openseadragon": "^2.2.1",
     "react": "15.3.2",

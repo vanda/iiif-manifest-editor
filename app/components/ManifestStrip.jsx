@@ -10,8 +10,8 @@ var OnScreenHelp = require('OnScreenHelp');
 var ManifestStrip = React.createClass({
   getInitialState: function() {
     return {
-      selectedCanvasStartIndex: undefined,
-      selectedCanvasEndIndex: undefined,
+      selectedManifestStartIndex: undefined,
+      selectedManifestEndIndex: undefined,
       helpSection: ''
     }
   },
@@ -50,32 +50,32 @@ var ManifestStrip = React.createClass({
     this.scrollManifestStripByViewingDirection(this.props.manifestData.viewingDirection);
   },
   componentDidUpdate: function(prevProps) {
-    // center the selected canvas in the thumbnail strip using scrollLeft
-    if(this.props.selectedCanvasId !== prevProps.selectedCanvasId) {
+    // center the selected manifest in the thumbnail strip using scrollLeft
+    if(this.props.selectedManifestId !== prevProps.selectedManifestId) {
       var $thumbnailStrip = $(ReactDOM.findDOMNode(this));
-      var $activeCanvas = $thumbnailStrip.find('.thumbnail-strip-canvas.active');
+      var $activeManifest = $thumbnailStrip.find('.thumbnail-strip-manifest.active');
 
-      if($activeCanvas.offset() !== undefined) {
-        var scrollPosition = $thumbnailStrip.scrollLeft() + ($activeCanvas.offset().left + $activeCanvas.width()/2) - $thumbnailStrip.width()/2;
-        $activeCanvas.css({opacity:0.6});
+      if($activeManifest.offset() !== undefined) {
+        var scrollPosition = $thumbnailStrip.scrollLeft() + ($activeManifest.offset().left + $activeManifest.width()/2) - $thumbnailStrip.width()/2;
+        $activeManifest.css({opacity:0.6});
         $($thumbnailStrip).animate({
           scrollLeft: scrollPosition,
         }, 300, function() {
-          $activeCanvas.css({opacity:1.0});
+          $activeManifest.css({opacity:1.0});
         });
       }
     }
   },
   handleSort: function(updatedSortOrder) {
-    this.props.dispatch(actions.reorderCanvases(updatedSortOrder));
+    this.props.dispatch(actions.reorderManifests(updatedSortOrder));
 
-    // deselect canvases on reorder
-    this.deSelectCanvases();
+    // deselect manifests on reorder
+    this.deSelectManifests();
   },
   appendEmptyManifestToSequence: function() {
-    // dispatch action to add empty canvas to end of sequence
-    var targetCanvasIndex = this.props.manifestoObject.getSequenceByIndex(0).getCanvases().length;
-    var emptyCanvas = {
+    // dispatch action to add empty manifest to end of sequence
+    var targetManifestIndex = this.props.manifestoObject.getSequenceByIndex(0).getManifests().length;
+    var emptyManifest = {
       "@id": "http://" + uuid(),
       "@type": "sc:Manifest",
       "label": "Empty Manifest",
@@ -83,9 +83,9 @@ var ManifestStrip = React.createClass({
       "width": 0,
       "images": []
     };
-    this.props.dispatch(actions.addEmptyCanvasAtIndex(emptyCanvas, targetCanvasIndex));
+    this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
   },
-  addCanvases: function(e) {
+  addManifests: function(e) {
     // stops browsers from redirecting
     if(e.preventDefault) {
       e.preventDefault();
@@ -94,26 +94,26 @@ var ManifestStrip = React.createClass({
       e.stopPropagation();
     }
 
-    // get the index in the thumbnail strip to insert the selected canvases
-    var insertIndex = e.target.getAttribute('data-canvas-index');
+    // get the index in the thumbnail strip to insert the selected manifests
+    var insertIndex = e.target.getAttribute('data-manifest-index');
 
-    // handle adding canvases to the beginning and end of a sequence (insertIndex is null)
+    // handle adding manifests to the beginning and end of a sequence (insertIndex is null)
     if (insertIndex === null) {
-      // check mouse position to determine whether canvases were dropped to very beginning of sequence
+      // check mouse position to determine whether manifests were dropped to very beginning of sequence
       // everything above x = 20 is not beginning of sequence so either has an insertIndex or
-      // if it is null it is assumed that canvases were dropped to the end of the sequence
+      // if it is null it is assumed that manifests were dropped to the end of the sequence
       if (e.clientX > 20) {
         var sequence = this.props.manifestoObject.getSequenceByIndex(0);
-        insertIndex = sequence.canvases.length;
+        insertIndex = sequence.manifests.length;
       }
     }
 
-    // raw canvas data is being passed as a JSON string
-    var rawCanvasData = e.dataTransfer.getData('text/plain');
-    if(rawCanvasData !== '') {
-      var canvases = JSON.parse(rawCanvasData);
-      for(var canvasIndex = canvases.length-1; canvasIndex >= 0; canvasIndex--) {
-        this.props.dispatch(actions.addCanvasAtIndex(canvases[canvasIndex], insertIndex));
+    // raw manifest data is being passed as a JSON string
+    var rawManifestData = e.dataTransfer.getData('text/plain');
+    if(rawManifestData !== '') {
+      var manifests = JSON.parse(rawManifestData);
+      for(var manifestIndex = manifests.length-1; manifestIndex >= 0; manifestIndex--) {
+        this.props.dispatch(actions.addManifestAtIndex(manifests[manifestIndex], insertIndex));
       }
     }
 
@@ -131,71 +131,71 @@ var ManifestStrip = React.createClass({
     // some browsers require a return false for canceling the onDragOver event
     return false;
   },
-  deSelectCanvases: function() {
-    // reset the start and end range of the selected canvases
+  deSelectManifests: function() {
+    // reset the start and end range of the selected manifests
     this.setState({
-      selectedCanvasStartIndex: undefined,
-      selectedCanvasEndIndex: undefined
+      selectedManifestStartIndex: undefined,
+      selectedManifestEndIndex: undefined
     });
 
-    // hide the prompt to delete the selected canvases
-    this.toggleDeleteSelectedCanvasesPrompt(false);
+    // hide the prompt to delete the selected manifests
+    this.toggleDeleteSelectedManifestsPrompt(false);
   },
-  updateSelectedCanvasIndexes: function(clickedCanvasIndex) {
-    // get the index of the active canvas
+  updateSelectedManifestIndexes: function(clickedManifestIndex) {
+    // get the index of the active manifest
     var manifest = this.props.manifestoObject;
     var sequence = manifest.getSequenceByIndex(0);
-    var canvas = sequence.getCanvasById(this.props.selectedCanvasId);
-    var activeCanvasIndex = sequence.getCanvasIndexById(canvas.id);
+    var manifest = sequence.getManifestById(this.props.selectedManifestId);
+    var activeManifestIndex = sequence.getManifestIndexById(manifest.id);
 
-    // set the start and end indexes for the selected range of canvases in the state
-    var selectedCanvasStartIndex = (activeCanvasIndex > clickedCanvasIndex) ? clickedCanvasIndex : activeCanvasIndex;
-    var selectedCanvasEndIndex = (activeCanvasIndex > clickedCanvasIndex) ? activeCanvasIndex : clickedCanvasIndex;
+    // set the start and end indexes for the selected range of manifests in the state
+    var selectedManifestStartIndex = (activeManifestIndex > clickedManifestIndex) ? clickedManifestIndex : activeManifestIndex;
+    var selectedManifestEndIndex = (activeManifestIndex > clickedManifestIndex) ? activeManifestIndex : clickedManifestIndex;
     this.setState({
-      selectedCanvasStartIndex: selectedCanvasStartIndex,
-      selectedCanvasEndIndex: selectedCanvasEndIndex
+      selectedManifestStartIndex: selectedManifestStartIndex,
+      selectedManifestEndIndex: selectedManifestEndIndex
     });
 
-    // show the prompt to delete the selected canvases
-    this.toggleDeleteSelectedCanvasesPrompt(true);
+    // show the prompt to delete the selected manifests
+    this.toggleDeleteSelectedManifestsPrompt(true);
   },
-  toggleDeleteSelectedCanvasesPrompt: function(toggleDisplay) {
-    var $deleteSelectedCanvasPrompt = $(ReactDOM.findDOMNode(this.refs.deleteSelectedCanvasPrompt));
+  toggleDeleteSelectedManifestsPrompt: function(toggleDisplay) {
+    var $deleteSelectedManifestPrompt = $(ReactDOM.findDOMNode(this.refs.deleteSelectedManifestPrompt));
     if(toggleDisplay) {
-      $deleteSelectedCanvasPrompt.slideDown();
+      $deleteSelectedManifestPrompt.slideDown();
     } else {
-      $deleteSelectedCanvasPrompt.slideUp();
+      $deleteSelectedManifestPrompt.slideUp();
     }
   },
-  isCanvasSelected: function(currentCanvasIndex) {
-    // return whether the canvas is selected if its index falls within the selected start and end range
-    return currentCanvasIndex >= this.state.selectedCanvasStartIndex && currentCanvasIndex <= this.state.selectedCanvasEndIndex;
+  isManifestSelected: function(currentManifestIndex) {
+    // return whether the manifest is selected if its index falls within the selected start and end range
+    return currentManifestIndex >= this.state.selectedManifestStartIndex && currentManifestIndex <= this.state.selectedManifestEndIndex;
   },
-  deleteSelectedCanvases: function() {
-    // delete the selected canvases from the end of the thumbnail strip first; deleting from the front of the
-    // thumbnail strip shifts the canvas indexes left causing subsequent deletions to fail
-    var {dispatch, canvasIndex} = this.props;
-    for(var canvasIndex = this.state.selectedCanvasEndIndex; canvasIndex >= this.state.selectedCanvasStartIndex; canvasIndex--) {
-      // dispatch an action to reset the selected canvas id in the store if the active canvas is deleted
-      if(canvasIndex == this.props.manifestoObject.getSequenceByIndex(0).getCanvasIndexById(this.props.selectedCanvasId)) {
-        dispatch(actions.setSelectedCanvasId(undefined));
-      }
-      // dispatch an action to delete the selected canvas at the given index within the selected range
-      dispatch(actions.deleteCanvasAtIndex(canvasIndex));
+  deleteSelectedManifests: function() {
+    // delete the selected manifests from the end of the thumbnail strip first; deleting from the front of the
+    // thumbnail strip shifts the manifest indexes left causing subsequent deletions to fail
+    var {dispatch, manifestIndex} = this.props;
+    for(var manifestIndex = this.state.selectedManifestEndIndex; manifestIndex >= this.state.selectedManifestStartIndex; manifestIndex--) {
+      // dispatch an action to reset the selected manifest id in the store if the active manifest is deleted
+//      if(manifestIndex == this.props.manifestoObject.getSequenceByIndex(0).getManifestIndexById(this.props.selectedManifestId)) {
+//        dispatch(actions.setSelectedManifestId(undefined));
+ //     }
+      // dispatch an action to delete the selected manifest at the given index within the selected range
+      dispatch(actions.deleteManifestAtIndex(manifestIndex));
     }
 
-    // deselect canvases after deleting canvases
-    this.deSelectCanvases();
+    // deselect manifests after deleting manifests 
+    this.deSelectManifests();
   },
   render: function() {
     var _this = this;
     return (
-      <div className="thumbnail-strip-container" onDragOver={this.cancelDragOver} onDrop={this.addCanvases}>
+      <div className="thumbnail-strip-container" onDragOver={this.cancelDragOver} onDrop={this.addManifests}>
         <OnScreenHelp ref="onScreenHelp" section={this.state.helpSection} />
-        <div className="alert alert-danger delete-selected-canvases-prompt" ref="deleteSelectedCanvasPrompt">
-          Delete selected canvases?
-          <button type="button" className="btn btn-default" onClick={this.deleteSelectedCanvases}><i className="fa fa-check"></i> OK</button>
-          <button type="button" className="btn btn-default" onClick={this.deSelectCanvases}><i className="fa fa-times"></i> Cancel</button>
+        <div className="alert alert-danger delete-selected-manifests-prompt" ref="deleteSelectedManifestPrompt">
+          Delete selected manifests?
+          <button type="button" className="btn btn-default" onClick={this.deleteSelectedManifests}><i className="fa fa-check"></i> OK</button>
+          <button type="button" className="btn btn-default" onClick={this.deSelectManifests}><i className="fa fa-times"></i> Cancel</button>
         </div>
         <a className="help-icon" href="javascript:;" onClick={() => this.showHelp('ManifestStrip')} ><i className="fa fa-question-circle-o"></i></a>
         <SortableItems name="simple-sort" onSort={this.handleSort}>
@@ -209,8 +209,8 @@ var ManifestStrip = React.createClass({
             })
           }
         </SortableItems>
-        <button type="button" className="btn btn-default add-new-canvas-button" title="Add new manifest to collection" onClick={this.appendEmptyManifestToSequence}>
-          <span className="fa fa-plus-circle fa-2x"></span><br />Add Canvas
+        <button type="button" className="btn btn-default add-new-manifest-button" title="Add new manifest to collection" onClick={this.appendEmptyManifestToSequence}>
+          <span className="fa fa-plus-circle fa-2x"></span><br />Add Manifest
         </button>
       </div>
     );
@@ -222,7 +222,7 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedCanvasId: state.manifestReducer.selectedCanvasId
+      selectedManifestId: state.manifestReducer.selectedManifestId
     };
   }
 )(ManifestStrip);

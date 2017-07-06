@@ -45,18 +45,7 @@ var NewCollection = React.createClass({
   	  ],
         }
       ],
-      "manifests": [
-  	{
-             "@id": "http://" + uuid(),
-             "@type": "sc:Manifest",
-             "label": [
-               {
-                 "@value": "Normal Manifest",
-                 "@language": "en"
-               }
-             ]
-        }
-      ]
+      "manifests": []
     };
 
     this.props.dispatch(actions.setManifestoObject(manifesto.create(JSON.stringify(emptyCollection))));

@@ -7,118 +7,118 @@ var uuid = require('node-uuid');
 var Utils = require('Utils');
 import LazyLoad from 'react-lazy-load';
 
-var ThumbnailStripCanvas = React.createClass({
+var ManifestStripCanvas = React.createClass({
   getInitialState: function() {
     return {
       isOver: false
     };
   },
   componentDidMount: function() {
-    var $canvas = $(ReactDOM.findDOMNode(this));
+    var $manifest = $(ReactDOM.findDOMNode(this));
 
-    // attach hover event to the canvas to fade in and out canvas menu options
-    this.attachHoverEventToCanvas($canvas);
+    // attach hover event to the manifest to fade in and out manifest menu options
+    this.attachHoverEventToManifest($manifest);
   },
-  attachHoverEventToCanvas: function($canvas) {
+  attachHoverEventToManifest: function($manifest) {
     var fadeInterval = 400;
 
-    // fade in and out the canvas menu options
-    var $canvasMenuOptions = $canvas.find('.canvas-menu-options');
-    $canvas.hover(function() {
-      $canvasMenuOptions.stop(true, true).fadeIn(fadeInterval);
+    // fade in and out the manifest menu options
+    var $manifestMenuOptions = $manifest.find('.manifest-menu-options');
+    $manifest.hover(function() {
+      $manifestMenuOptions.stop(true, true).fadeIn(fadeInterval);
     }, function () {
-      $canvasMenuOptions.stop(true, true).fadeOut(fadeInterval);
+      $manifestMenuOptions.stop(true, true).fadeOut(fadeInterval);
     });
 
-    // fade in and out the delete canvas button
-    var $deleteCanvasButton = $canvas.find('.delete-canvas-button');
-    $canvas.hover(function() {
-      $deleteCanvasButton.stop(true, true).fadeIn(fadeInterval);
+    // fade in and out the delete manifest button
+    var $deleteManifestButton = $manifest.find('.delete-manifest-button');
+    $manifest.hover(function() {
+      $deleteManifestButton.stop(true, true).fadeIn(fadeInterval);
     }, function () {
-      $deleteCanvasButton.stop(true, true).fadeOut(fadeInterval);
+      $deleteManifestButton.stop(true, true).fadeOut(fadeInterval);
     });
   },
-  handleCanvasClick: function(e) {
+  handleManifestClick: function(e) {
     if(e.shiftKey) {
-      // on shift click, select the range of canvases in the thumbnail strip
-      this.props.onCanvasShiftClick(this.props.canvasIndex);
+      // on shift click, select the range of manifests in the thumbnail strip
+      this.props.onManifestShiftClick(this.props.manifestIndex);
     } else {
-      // on normal click, deselect all canvases in the thumbnail strip
-      this.props.onCanvasNormalClick();
+      // on normal click, deselect all manifests in the thumbnail strip
+      this.props.onManifestNormalClick();
 
-      // dispatch action to set the active canvas in the store
-      var {dispatch, canvasId} = this.props;
-      dispatch(actions.setSelectedCanvasId(canvasId));
+      // dispatch action to set the active manifest in the store
+      var {dispatch, manifestId} = this.props;
+      dispatch(actions.setSelectedManifestId(manifestId));
     }
   },
   setActiveClass: function() {
-    if(this.props.selectedCanvasId !== undefined && this.props.canvasId === this.props.selectedCanvasId) {
-      return "thumbnail-strip-canvas active";
+    if(this.props.selectedManifestId !== undefined && this.props.manifestId === this.props.selectedManifestId) {
+      return "thumbnail-strip-manifest active";
     } else {
-      return "thumbnail-strip-canvas";
+      return "thumbnail-strip-manifest";
     }
   },
   setSelectedClass: function() {
-    return this.props.isSelectedCanvas ? "selected-canvas" : "";
+    return this.props.isSelectedManifest ? "selected-manifest" : "";
   },
   getDefaultThumbnailHeight: function() {
     return 150;
   },
-  getThumbnailCanvasWidth: function(canvas) {
-    return Math.round((canvas.getWidth() / canvas.getHeight()) * this.getDefaultThumbnailHeight());
+  getThumbnailManifestWidth: function(manifest) {
+    return Math.round((manifest.getWidth() / manifest.getHeight()) * this.getDefaultThumbnailHeight());
   },
-  getMainImage: function(canvas) {
-    return canvas.getImages().length > 0 ? canvas.getThumbUri('', this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150';
+  getMainImage: function(manifest) {
+    return manifest.getImages().length > 0 ? manifest.getCanonicalImageUri(this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
   },
-  getMainImageLabel: function(canvas) {
-    return canvas !== null ? Utils.getLocalizedPropertyValue(canvas.getLabel()) : 'Empty canvas';
+  getMainImageLabel: function(manifest) {
+    return manifest !== null ? Utils.getLocalizedPropertyValue(manifest.getLabel()) : 'Empty manifest';
   },
-  addCanvasLeft: function() {
-    // dispatch an action to add an empty canvas to the left of the given canvas
-    var {dispatch, canvasIndex} = this.props;
-    var emptyCanvas = {
+  addManifestLeft: function() {
+    // dispatch an action to add an empty manifest to the left of the given manifest
+    var {dispatch, manifestIndex} = this.props;
+    var emptyManifest = {
       "@id": "http://" + uuid(),
-      "@type": "sc:Canvas",
-      "label": "Empty canvas",
+      "@type": "sc:Manifest",
+      "label": "Empty manifest",
       "height": 0,
       "width": 0,
       "images": []
     };
-    dispatch(actions.addEmptyCanvasAtIndex(emptyCanvas, canvasIndex));
+    dispatch(actions.addEmptyManifestAtIndex(emptyManifest, manifestIndex));
   },
-  addCanvasRight: function() {
-    // dispatch an action to add an empty canvas to the left of the given canvas
-    var {dispatch, canvasIndex} = this.props;
-    var emptyCanvas = {
+  addManifestRight: function() {
+    // dispatch an action to add an empty manifest to the left of the given manifest
+    var {dispatch, manifestIndex} = this.props;
+    var emptyManifest = {
       "@id": "http://" + uuid(),
-      "@type": "sc:Canvas",
-      "label": "Empty canvas",
+      "@type": "sc:Manifest",
+      "label": "Empty manifest",
       "height": 0,
       "width": 0,
       "images": []
     };
-    dispatch(actions.addEmptyCanvasAtIndex(emptyCanvas, canvasIndex + 1));
+    dispatch(actions.addEmptyManifestAtIndex(emptyManifest, manifestIndex + 1));
   },
-  duplicateCanvas: function() {
-    // dispatch an action to duplicate the canvas at the given index
-    var {dispatch, canvasIndex} = this.props;
-    dispatch(actions.duplicateCanvasAtIndex(canvasIndex));
+  duplicateManifest: function() {
+    // dispatch an action to duplicate the manifest at the given index
+    var {dispatch, manifestIndex} = this.props;
+    dispatch(actions.duplicateManifestAtIndex(manifestIndex));
   },
-  deleteCanvas: function() {
-    // dispatch an action to delete the canvas at the given index from the thumbnail strip
-    var {dispatch, canvasIndex} = this.props;
-    if (canvasIndex == this.props.manifestoObject.getSequenceByIndex(0).getCanvasIndexById(this.props.selectedCanvasId)) {
-      dispatch(actions.setSelectedCanvasId(undefined));
+  deleteManifest: function() {
+    // dispatch an action to delete the manifest at the given index from the thumbnail strip
+    var {dispatch, manifestIndex} = this.props;
+    if (manifestIndex == this.props.manifestoObject.getSequenceByIndex(0).getManifestIndexById(this.props.selectedManifestId)) {
+      dispatch(actions.setSelectedManifestId(undefined));
     }
-    dispatch(actions.deleteCanvasAtIndex(canvasIndex));
+    dispatch(actions.deleteManifestAtIndex(manifestIndex));
   },
-  openDeleteCanvasConfirmationDialog: function() {
-    if(confirm('Are you sure you want to delete this canvas?')) {
-      this.deleteCanvas();
+  openDeleteManifestConfirmationDialog: function() {
+    if(confirm('Are you sure you want to delete this manifest?')) {
+      this.deleteManifest();
     }
   },
-  openImportCanvasesView: function() {
-    window.location = '#/canvases';
+  openImportManifestsView: function() {
+    window.location = '#/manifests';
   },
   stringTruncate: function(str, maxLength) {
     return str.length > maxLength ? str.substring(0, maxLength - 1) + '…' : str;
@@ -133,48 +133,54 @@ var ThumbnailStripCanvas = React.createClass({
       isOver: false
     });
   },
-  setCanvasContainerClass: function() {
-    return this.state.isOver ? "thumbnail-strip-canvas-container selected-drop-target-canvas" : "thumbnail-strip-canvas-container";
+  setManifestContainerClass: function() {
+    return this.state.isOver ? "thumbnail-strip-manifest-container selected-drop-target-manifest" : "thumbnail-strip-manifest-container";
   },
-  updateCanvasWidth: function() {
-    // recalculate the width on each visible canvas based on its image dimensions
-    var $visibleCanvasContainer = $(ReactDOM.findDOMNode(this));
-    var $thumbnailStripCanvas = $visibleCanvasContainer.find('.thumbnail-strip-canvas');
-    var $image = $thumbnailStripCanvas.find('.is-visible img').first();
-    var $canvasLabel = $thumbnailStripCanvas.find('.canvas-label span').first();
-    $thumbnailStripCanvas.css('width', ($image.width() + 10));
-    $canvasLabel.css('width', ($image.width() + 10));
+  updateManifestWidth: function() {
+    // recalculate the width on each visible manifest based on its image dimensions
+    var $visibleManifestContainer = $(ReactDOM.findDOMNode(this));
+    var $thumbnailStripManifest = $visibleManifestContainer.find('.thumbnail-strip-manifest');
+    var $image = $thumbnailStripManifest.find('.is-visible img').first();
+    var $manifestLabel = $thumbnailStripManifest.find('.manifest-label span').first();
+    $thumbnailStripManifest.css('width', ($image.width() + 10));
+    $manifestLabel.css('width', ($image.width() + 10));
   },
   render: function() {
-    var canvas = this.props.manifestoObject.getSequenceByIndex(0).getCanvasById(this.props.canvasId);
-    var canvasStyle = this.props.isSelectedCanvas ? {} : { background: '#fff url(./img/loading-small.gif) no-repeat center center' };
+    var manifests = this.props.manifestoObject.getManifests();
+	var manifest = manifests[0].getSequenceByIndex(0).getCanvasByIndex(0);
+		  
+//    this.props.manifestoObject.getManifestByIndex(this.props.manifestId).then(function(data) {
+//		manifest = data
+//	});
+	
+    var manifestStyle = this.props.isSelectedManifest ? {} : { background: '#fff url(./img/loading-small.gif) no-repeat center center' };
 
-    canvasStyle.width = this.getThumbnailCanvasWidth(canvas) + 'px';
+    manifestStyle.width = this.getThumbnailManifestWidth(manifest) + 'px';
 
     return (
-      <div className={this.setCanvasContainerClass()} data-canvas-index={this.props.canvasIndex} onDragOver={this.handleDragOver} onDragLeave={this.handleDragLeave}>
-        <a className="delete-canvas-button btn btn-danger btn-xs btn-transparent" onClick={this.openDeleteCanvasConfirmationDialog} title="Remove Canvas"><i className="fa fa-trash"></i></a>
-        <span className="canvas-menu-options dropdown">
-          <a className="btn btn-default btn-xs btn-transparent dropdown-toggle" data-toggle="dropdown" title="Show Canvas Options"><i className="fa fa-bars"></i></a>
+      <div className={this.setManifestContainerClass()} data-manifest-index={this.props.manifestIndex} onDragOver={this.handleDragOver} onDragLeave={this.handleDragLeave}>
+        <a className="delete-manifest-button btn btn-danger btn-xs btn-transparent" onClick={this.openDeleteManifestConfirmationDialog} title="Remove Manifest"><i className="fa fa-trash"></i></a>
+        <span className="manifest-menu-options dropdown">
+          <a className="btn btn-default btn-xs btn-transparent dropdown-toggle" data-toggle="dropdown" title="Show Manifest Options"><i className="fa fa-bars"></i></a>
           <ul className="dropdown-menu">
-            <li onClick={this.addCanvasLeft}><i className="context-menu-item fa fa-arrow-left"></i> Add canvas left</li>
-            <li onClick={this.addCanvasRight}><i className="context-menu-item fa fa-arrow-right"></i> Add canvas right</li>
-            <li onClick={this.duplicateCanvas}><i className="context-menu-item fa fa-files-o"></i> Duplicate canvas</li>
+            <li onClick={this.addManifestLeft}><i className="context-menu-item fa fa-arrow-left"></i> Add manifest left</li>
+            <li onClick={this.addManifestRight}><i className="context-menu-item fa fa-arrow-right"></i> Add manifest right</li>
+            <li onClick={this.duplicateManifest}><i className="context-menu-item fa fa-files-o"></i> Duplicate manifest</li>
             {(() => {
               if(window.location.hash.startsWith('#/edit?')) {
                 return (
-                  <li onClick={() => this.openImportCanvasesView()}><i className="context-menu-item fa fa-picture-o"></i> Import canvases</li>
+                  <li onClick={() => this.openImportManifestsView()}><i className="context-menu-item fa fa-picture-o"></i> Import manifests</li>
                 );
               }
             })()}
           </ul>
         </span>
-        <div style={canvasStyle} className={this.setActiveClass()} onClick={this.handleCanvasClick}>
+        <div style={manifestStyle} className={this.setActiveClass()} onClick={this.handleManifestClick}>
           <LazyLoad offsetHorizontal={600}>
-            <img onLoad={this.updateCanvasWidth} className={this.setSelectedClass()} src={this.getMainImage(canvas)} data-canvas-index={this.props.canvasIndex} alt={this.getMainImageLabel(canvas)} />
+            <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src={this.getMainImage(manifest)} data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
           </LazyLoad>
-          <div className="canvas-label" title={this.getMainImageLabel(canvas)}>
-            <span>{this.stringTruncate(this.getMainImageLabel(canvas), 20)}</span>
+          <div className="manifest-label" title={this.getMainImageLabel(manifest)}>
+            <span>{this.stringTruncate(this.getMainImageLabel(manifest), 20)}</span>
           </div>
         </div>
       </div>
@@ -186,7 +192,7 @@ module.exports = connect(
   (state) => {
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
-      selectedCanvasId: state.manifestReducer.selectedCanvasId
+      selectedManifestId: state.manifestReducer.selectedManifestId
     };
   }
-)(ThumbnailStripCanvas);
+)(ManifestStripCanvas);

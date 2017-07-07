@@ -147,12 +147,6 @@ var ManifestMetadataPanelPredefinedFields = React.createClass({
     var numUniqueMetadataFields =  availableMetadataFields.filter(function(field) { return !field.isUnique }).length;
     var numMultiValuedMetadataFields = availableMetadataFields.filter(function(field) { return field.isUnique }).length;
 
-    if(this.props.manifestoObject.getLabel()) {  // manifest label
-      this.updateMetadataFieldLists('label', this.props.manifestoObject.getLabel(), availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.manifestoObject.getDescription()) {  // description
-      this.updateMetadataFieldLists('description', this.props.manifestoObject.getDescription(), availableMetadataFields, activeMetadataFields);
-    }
     if(this.props.manifestoObject.getAttribution()) {  // attribution
       this.updateMetadataFieldLists('attribution', this.props.manifestoObject.getAttribution(), availableMetadataFields, activeMetadataFields);
     }
@@ -161,18 +155,6 @@ var ManifestMetadataPanelPredefinedFields = React.createClass({
     }
     if(this.props.manifestoObject.getLogo()) {  // logo
       this.updateMetadataFieldLists('logo', this.props.manifestoObject.getLogo(), availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.manifestData.related) {  // related
-      this.updateMetadataFieldLists('related', this.props.manifestData.related, availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.manifestData.seeAlso) {  // see also
-      this.updateMetadataFieldLists('seeAlso', this.props.manifestData.seeAlso.toString(), availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.manifestData.viewingDirection) {  // viewing direction
-      this.updateMetadataFieldLists('viewingDirection', this.props.manifestData.viewingDirection, availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.manifestData.viewingHint) {  // viewing hint
-      this.updateMetadataFieldLists('viewingHint', this.props.manifestData.viewingHint, availableMetadataFields, activeMetadataFields);
     }
 
     // update the metadata field lists in the state so that the component uses the correct values when rendering
@@ -189,9 +171,6 @@ var ManifestMetadataPanelPredefinedFields = React.createClass({
     if(this.props.manifestData.viewingDirection !== prevProps.manifestData.viewingDirection && this.props.manifestData.viewingDirection !== undefined) {
       var availableMetadataFields = [...this.state.availableMetadataFields];
       var activeMetadataFields = [...this.state.activeMetadataFields];
-
-      // update the value of the viewing direction field
-      this.updateMetadataFieldLists('viewingDirection', this.props.manifestData.viewingDirection, availableMetadataFields, activeMetadataFields);
 
       // update the metadata field lists in the state
       this.setState({

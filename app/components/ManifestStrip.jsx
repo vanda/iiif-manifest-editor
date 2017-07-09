@@ -24,30 +24,13 @@ var ManifestStrip = React.createClass({
       backdrop: 'static'
     });
   },
-  scrollManifestStripByViewingDirection: function(viewingDirection) {
-    // scroll to beginning or end of thumbnail strip depending on viewingDirection
-    var $thumbnailStrip = $(ReactDOM.findDOMNode(this));
-    var scrollPosition = 0;
-    if(viewingDirection === 'right-to-left' || viewingDirection === 'bottom-to-top') {
-      $thumbnailStrip.find('.sortable-item').each(function(index, elem){
-        scrollPosition += ($(elem).width());
-      });
-    }
-    $($thumbnailStrip).animate({
-      scrollLeft: scrollPosition
-    }, 300);
-  },
   componentWillReceiveProps: function(nextProps) {
-    if(this.props.manifestData.viewingDirection !== nextProps.manifestData.viewingDirection) {
-      this.scrollManifestStripByViewingDirection(nextProps.manifestData.viewingDirection);
-    }
   },
   componentDidMount: function() {
     window.addEventListener("drop", function(e) {
       e = e || event;
       e.preventDefault();
     }, false);
-    this.scrollManifestStripByViewingDirection(this.props.manifestData.viewingDirection);
   },
   componentDidUpdate: function(prevProps) {
     // center the selected manifest in the thumbnail strip using scrollLeft
@@ -74,15 +57,37 @@ var ManifestStrip = React.createClass({
   },
   appendEmptyManifestToSequence: function() {
     // dispatch action to add empty manifest to end of sequence
-    var targetManifestIndex = this.props.manifestoObject.getSequenceByIndex(0).getManifests().length;
+    var targetManifestIndex = this.props.manifestoObject.getManifests().length;
     var emptyManifest = {
-      "@id": "http://" + uuid(),
-      "@type": "sc:Manifest",
-      "label": "Empty Manifest",
-      "height": 0,
-      "width": 0,
-      "images": []
+      "@context": "http://iiif.io/api/presentation/2/context.json",
+          "@id": "http://" + uuid(),
+          "@type": "sc:Manifest",
+          "label": "[Click to edit label]",
+      "metadata": [],
+          "description": [
+        {
+          "@value": "[Click to edit description]",
+          "@language": "en"
+        }
+      ],
+          "license": "https://creativecommons.org/licenses/by/3.0/",
+          "attribution": "[Click to edit attribution]",
+          "sequences": [
+                  {
+          "@id": "http://" + uuid(),
+          "@type": "sc:Sequence",
+          "label": [
+            {
+              "@value": "Normal Sequence",
+              "@language": "en"
+            }
+          ],
+          "canvases": []
+        }
+          ],
+          "structures": []
     };
+
     this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
   },
   addManifests: function(e) {

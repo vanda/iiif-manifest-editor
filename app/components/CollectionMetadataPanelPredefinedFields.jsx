@@ -11,7 +11,7 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
       numMultiValuedMetadataFields: undefined,
       numUnassignedMetadataFields: undefined,
       availableMetadataFields: [
-        {
+	    {
           name: 'label',
           label: 'Label',
           value: undefined,
@@ -19,6 +19,15 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
           isUnique: true,
           addPath: '',
           updatePath: 'label'
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          value: undefined,
+          isRequired: false,
+          isUnique: true,
+          addPath: '',
+          updatePath: 'description'
         },
         {
           name: 'license',
@@ -38,15 +47,6 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
           addPath: '',
           updatePath: 'logo'
         },
-        {
-          name: 'viewingDirection',
-          label: 'Viewing Direction',
-          value: undefined,
-          isRequired: false,
-          isUnique: true,
-          addPath: '',
-          updatePath: 'viewingDirection'
-        }
       ],
       activeMetadataFields: []
     }
@@ -102,20 +102,17 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
     var numUniqueMetadataFields =  availableMetadataFields.filter(function(field) { return !field.isUnique }).length;
     var numMultiValuedMetadataFields = availableMetadataFields.filter(function(field) { return field.isUnique }).length;
 
-    if(this.props.collectionoObject.getLabel()) {  // collection label
-      this.updateMetadataFieldLists('label', this.props.collectionoObject.getLabel(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getLabel()) {  // label
+      this.updateMetadataFieldLists('label', this.props.manifestoObject.getLabel(), availableMetadataFields, activeMetadataFields);
     }
-    if(this.props.collectionoObject.getDescription()) {  // description
-      this.updateMetadataFieldLists('description', this.props.collectionoObject.getDescription(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getDescription()) {  // description
+      this.updateMetadataFieldLists('description', this.props.manifestoObject.getDescription(), availableMetadataFields, activeMetadataFields);
     }
-    if(this.props.collectionoObject.getLicense()) {  // license
-      this.updateMetadataFieldLists('license', this.props.collectionoObject.getLicense(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getLicense()) {  // license
+      this.updateMetadataFieldLists('license', this.props.manifestoObject.getLicense(), availableMetadataFields, activeMetadataFields);
     }
-    if(this.props.collectionoObject.getLogo()) {  // logo
-      this.updateMetadataFieldLists('logo', this.props.collectionoObject.getLogo(), availableMetadataFields, activeMetadataFields);
-    }
-    if(this.props.collectionData.viewingDirection) {  // viewing direction
-      this.updateMetadataFieldLists('viewingDirection', this.props.collectionData.viewingDirection, availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getLogo()) {  // logo
+      this.updateMetadataFieldLists('logo', this.props.manifestoObject.getLogo(), availableMetadataFields, activeMetadataFields);
     }
 
     // update the metadata field lists in the state so that the component uses the correct values when rendering
@@ -129,19 +126,6 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
   },
   componentDidUpdate: function(prevProps, prevState) {
     // update the viewing direction field if it has been changed in the Sequence Metadata panel
-    if(this.props.collectionData.viewingDirection !== prevProps.collectionData.viewingDirection && this.props.collectionData.viewingDirection !== undefined) {
-      var availableMetadataFields = [...this.state.availableMetadataFields];
-      var activeMetadataFields = [...this.state.activeMetadataFields];
-
-      // update the value of the viewing direction field
-      this.updateMetadataFieldLists('viewingDirection', this.props.collectionData.viewingDirection, availableMetadataFields, activeMetadataFields);
-
-      // update the metadata field lists in the state
-      this.setState({
-        availableMetadataFields: availableMetadataFields,
-        activeMetadataFields: activeMetadataFields
-      });
-    }
   },
   addMetadataField: function() {
     // create copies of the metadata field lists
@@ -234,7 +218,7 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
         <dl>
           <dt className="metadata-field-label">Collection URI</dt>
           <dd className="metadata-field-value">
-            <a href={_this.props.collectionoObject.id} target="_blank">{_this.props.collectionoObject.id}</a>
+            <a href={_this.props.manifestoObject.id} target="_blank">{_this.props.manifestoObject.id}</a>
           </dd>
         </dl>
         {
@@ -302,8 +286,8 @@ var CollectionMetadataPanelPredefinedFields = React.createClass({
 module.exports = connect(
   (state) => {
     return {
-      collectionoObject: state.collectionReducer.collectionoObject,
-      collectionData: state.collectionReducer.collectionData
+      manifestoObject: state.manifestReducer.manifestoObject,
+      manifestData: state.manifestReducer.manifestData
     };
   }
 )(CollectionMetadataPanelPredefinedFields);

@@ -1,10 +1,11 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var CollectionMetadataPanel = require('CollectionMetadataPanel');
+var CollectionManifestMetadataPanel = require('CollectionManifestMetadataPanel');
 var BulkActionsPanel = require('BulkActionsPanel');
 var OnScreenHelp = require('OnScreenHelp');
 
-var CollectionAccordion = React.createClass({
+var CollectionMetadataAccordion = React.createClass({
   getInitialState: function() {
     return {
       helpSection: ''
@@ -34,7 +35,7 @@ var CollectionAccordion = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">
-              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-manifest-metadata"><i className="fa fa-book"></i> Manifest Metadata</a>
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-manifest-metadata"><i className="fa fa-book"></i> Collection Metadata</a>
               <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
             </h4>
           </div>
@@ -44,9 +45,22 @@ var CollectionAccordion = React.createClass({
             </div>
           </div>
         </div>
+	  <div className="panel panel-default">
+          <div className="panel-heading">
+            <h4 className="panel-title">
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-collectionmanifest-metadata"><i className="fa fa-file-image-o"></i> Collection Manifest Metadata</a>
+              <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionManifestMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
+            </h4>
+          </div>
+          <div id="collapse-collectionmanifest-metadata" className={this.setMetadataPanelClasses('canvasMetadata')}>
+            <div className="panel-body">
+              <CollectionManifestMetadataPanel/>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 });
 
-module.exports = CollectionAccordion;
+module.exports = CollectionMetadataAccordion;

@@ -18,9 +18,9 @@ var CollectionMetadataPanelCustomFields = React.createClass({
   },
   componentWillMount: function() {
     // initialize the active metadata field list with the fields defined in the collection
-    if(this.props.collectionData.metadata) {
+    if(this.props.manifestData.metadata) {
       this.setState({
-        activeMetadataFields: this.props.collectionData.metadata
+        activeMetadataFields: this.props.manifestData.metadata
       });
     }
   },
@@ -144,7 +144,7 @@ var CollectionMetadataPanelCustomFields = React.createClass({
 module.exports = connect(
   (state) => {
     return {
-      collectionData: state.collectionReducer.collectionData
+      manifestData: state.manifestReducer.manifestData
     };
   }
 )(CollectionMetadataPanelCustomFields);

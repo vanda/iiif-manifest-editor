@@ -10,6 +10,7 @@ var stateDefaults = {
   manifestoObject: undefined,
   manifestFilenameToSave: 'manifest.json',
   metadataFieldValue: undefined,
+  selectedManifestId: undefined,
   selectedCanvasId: undefined,
   error: undefined,
   showMetadataSidebar: true
@@ -35,10 +36,6 @@ export var manifestReducer = (state = stateDefaults, action) => {
     case 'SET_MANIFEST_DATA':
       return Object.assign({}, state, {
         manifestData: action.manifestData
-      });
-    case 'SET_COLLECTION_DATA':
-      return Object.assign({}, state, {
-        collectionData: action.collectionData
       });
     case 'SET_MANIFEST_FILE_NAME':
       return Object.assign({}, state, {
@@ -187,6 +184,24 @@ export var manifestReducer = (state = stateDefaults, action) => {
         manifestoObject: updatedManifestoObject,
         manifestData: updatedManifestData
       };
+    case 'ADD_EMPTY_MANIFEST_AT_INDEX':
+      // make a copy of the manifest data to update
+      var updatedCollectionData = {
+        ...state.manifestData
+      };
+
+      // insert the empty manifest at the given index in the sequence
+      updatedCollectionData.manifests.splice(action.manifestIndex, 0, action.emptyManifest);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedCollectionData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedCollectionData
+      };
     case 'ADD_EMPTY_CANVAS_AT_INDEX':
       // make a copy of the manifest data to update
       var updatedManifestData = {
@@ -286,6 +301,12 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         ...state,
         selectedCanvasId: action.selectedCanvasId,
+        error: undefined
+      });
+    case 'SET_SELECTED_MANIFEST_ID':
+      return Object.assign({}, state, {
+        ...state,
+        selectedManifestId: action.selectedManifestId,
         error: undefined
       });
     case 'REORDER_CANVASES':

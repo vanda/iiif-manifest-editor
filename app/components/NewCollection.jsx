@@ -49,7 +49,7 @@ var NewCollection = React.createClass({
     };
 
     this.props.dispatch(actions.setManifestoObject(manifesto.create(JSON.stringify(emptyCollection))));
-    this.props.dispatch(actions.setCollectionData(emptyCollection));
+    this.props.dispatch(actions.setManifestData(emptyCollection));
     window.location = '#/collection/edit';  // redirect to edit manifest
   },
   render: function() {

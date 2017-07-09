@@ -97,6 +97,14 @@ export var addEmptyCanvasAtIndex = (emptyCanvas, canvasIndex) => {
   }
 };
 
+export var addEmptyManifestAtIndex = (emptyManifest, manifestIndex) => {
+  return {
+    type: 'ADD_EMPTY_MANIFEST_AT_INDEX',
+    emptyManifest,
+    manifestIndex
+  }
+};
+
 export var addCanvasAtIndex = (canvas, canvasIndex) => {
   return {
     type: 'ADD_CANVAS_AT_INDEX',
@@ -126,9 +134,23 @@ export var setSelectedCanvasId = (selectedCanvasId) => {
   }
 };
 
+export var setSelectedManifestId = (selectedManifestId) => {
+  return {
+    type: 'SET_SELECTED_MANIFEST_ID',
+    selectedManifestId
+  }
+};
+
 export var reorderCanvases = (updatedSortOrder) => {
   return {
     type: 'REORDER_CANVASES',
+    updatedSortOrder
+  }
+};
+
+export var reorderManifests = (updatedSortOrder) => {
+  return {
+    type: 'REORDER_MANIFESTS',
     updatedSortOrder
   }
 };
@@ -156,6 +178,14 @@ export var addImageAnnotationToCanvas = (imageAnnotation, canvasIndex) => {
     type: 'ADD_IMAGE_ANNOTATION_TO_CANVAS',
     imageAnnotation,
     canvasIndex
+  };
+};
+
+export var addManifestToCollection = (manifest, manifestIndex) => {
+  return {
+    type: 'ADD_MANIFEST_TO_COLLECTION',
+    manifest,
+    manifestIndex
   };
 };
 

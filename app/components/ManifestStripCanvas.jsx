@@ -65,10 +65,12 @@ var ManifestStripCanvas = React.createClass({
     return 150;
   },
   getThumbnailManifestWidth: function(manifest) {
-    return Math.round((manifest.getWidth() / manifest.getHeight()) * this.getDefaultThumbnailHeight());
+	return 150;
+//    return Math.round((manifest.getWidth() / manifest.getHeight()) * this.getDefaultThumbnailHeight());
   },
   getMainImage: function(manifest) {
-    return manifest.getImages().length > 0 ? manifest.getCanonicalImageUri(this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
+//    return manifest.getImages().length > 0 ? manifest.getCanonicalImageUri(this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
+    return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
   },
   getMainImageLabel: function(manifest) {
     return manifest !== null ? Utils.getLocalizedPropertyValue(manifest.getLabel()) : 'Empty manifest';
@@ -147,7 +149,7 @@ var ManifestStripCanvas = React.createClass({
   },
   render: function() {
     var manifests = this.props.manifestoObject.getManifests();
-	var manifest = manifests[0].getSequenceByIndex(0).getCanvasByIndex(0);
+	var manifest = manifests[0];
 		  
 //    this.props.manifestoObject.getManifestByIndex(this.props.manifestId).then(function(data) {
 //		manifest = data

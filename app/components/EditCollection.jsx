@@ -3,7 +3,7 @@ var {connect} = require('react-redux');
 var actions = require('actions');
 var classNames = require('classnames');
 var Viewer = require('Viewer');
-var MetadataSidebar = require('MetadataSidebar');
+var CollectionMetadataSidebar = require('CollectionMetadataSidebar');
 var ManifestStrip = require('ManifestStrip');
 
 
@@ -14,7 +14,7 @@ var EditCollection = React.createClass({
     });
   },
   componentWillMount: function() {
-    if(this.props.collectionData === undefined) {
+    if(this.props.manifestData === undefined) {
       window.location.hash = '#/';
     }
 
@@ -41,16 +41,16 @@ var EditCollection = React.createClass({
         'viewer-thumbnail-strip-wide-view': !this.props.showMetadataSidebar
       }
     );
-    if(this.props.collectionData === undefined) {
+    if(this.props.manifestData === undefined) {
       return false;  // do not render the component when no manifest data exists to prevent errors before redirecting
     } else {
       return (
         <div className="edit-manifest-container container-fluid">
           <div className="row">
-            <div className={viewerThumbnailStripClasses}>
-              <ManifestStrip/>
-            </div>
-            <MetadataSidebar ref="sidebar"/>
+        //    <div className={viewerThumbnailStripClasses}>
+        //      <ManifestStrip/>
+        //    </div>
+            <CollectionMetadataSidebar ref="sidebar"/>
           </div>
         </div>
       );
@@ -62,8 +62,8 @@ module.exports = connect(
   (state) => {
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
-      collectionData: state.manifestReducer.collectionData,
-      selectedCanvasId: state.manifestReducer.selectedCanvasId,
+      manifestData: state.manifestReducer.manifestData,
+      selectedManifestId: state.manifestReducer.selectedManifestId,
       showMetadataSidebar: state.manifestReducer.showMetadataSidebar
     };
   }

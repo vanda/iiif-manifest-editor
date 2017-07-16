@@ -51,7 +51,7 @@ var CollectionManifestMetadataPanel = React.createClass({
     return uri.substr(-14) === '/manifest.json';
   },
   handleManifestUri: function(manifestUri) {
-    var {dispatch} = this.props;
+    var {dispatch, selectedManifestIndex} = this.props;
     var that = this;
     // check if the entered URI is a valid IIIF Image API URI; if not, check if it redirects to one
     if(this.isIiifManifestUri(manifestUri)) {
@@ -76,8 +76,9 @@ var CollectionManifestMetadataPanel = React.createClass({
   render: function() {
     var manifests = this.props.manifestoObject.getManifests();
     if(manifests.length > 0) {
-      var manifest = manifests[0];
-	  var manifestLabelPath = "manifest/" + "0" + "/label";
+	  var index = this.props.selectedManifestIndex || 0;
+      var manifest = manifests[index];
+      var manifestLabelPath = "manifest/" + "0" + "/label";
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />
@@ -117,7 +118,7 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedManifestId: state.manifestReducer.selectedManifestId,
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
       error: state.manifestReducer.error
     };
   }

@@ -303,10 +303,10 @@ export var manifestReducer = (state = stateDefaults, action) => {
         selectedCanvasId: action.selectedCanvasId,
         error: undefined
       });
-    case 'SET_SELECTED_MANIFEST_ID':
+    case 'SET_SELECTED_MANIFEST_INDEX':
       return Object.assign({}, state, {
         ...state,
-        selectedManifestId: action.selectedManifestId,
+        selectedManifestIndex: action.selectedManifestIndex,
         error: undefined
       });
     case 'REORDER_CANVASES':

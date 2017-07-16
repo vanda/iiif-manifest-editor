@@ -47,8 +47,8 @@ var ManifestStripCanvas = React.createClass({
       this.props.onManifestNormalClick();
 
       // dispatch action to set the active manifest in the store
-      var {dispatch, manifestId} = this.props;
-      dispatch(actions.setSelectedManifestId(manifestId));
+      var {dispatch, manifestIndex} = this.props;
+      dispatch(actions.setSelectedManifestIndex(manifestIndex));
     }
   },
   setActiveClass: function() {
@@ -194,7 +194,7 @@ module.exports = connect(
   (state) => {
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
-      selectedManifestId: state.manifestReducer.selectedManifestId
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex
     };
   }
 )(ManifestStripCanvas);

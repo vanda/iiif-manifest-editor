@@ -134,10 +134,10 @@ export var setSelectedCanvasId = (selectedCanvasId) => {
   }
 };
 
-export var setSelectedManifestId = (selectedManifestId) => {
+export var setSelectedManifestIndex = (selectedManifestIndex) => {
   return {
-    type: 'SET_SELECTED_MANIFEST_ID',
-    selectedManifestId
+    type: 'SET_SELECTED_MANIFEST_INDEX',
+    selectedManifestIndex
   }
 };
 

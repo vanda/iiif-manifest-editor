@@ -34,7 +34,7 @@ var ManifestStrip = React.createClass({
   },
   componentDidUpdate: function(prevProps) {
     // center the selected manifest in the thumbnail strip using scrollLeft
-    if(this.props.selectedManifestId !== prevProps.selectedManifestId) {
+    if(this.props.selectedManifestIndex !== prevProps.selectedManifestIndex) {
       var $thumbnailStrip = $(ReactDOM.findDOMNode(this));
       var $activeManifest = $thumbnailStrip.find('.thumbnail-strip-manifest.active');
 
@@ -150,7 +150,7 @@ var ManifestStrip = React.createClass({
     // get the index of the active manifest
     var manifest = this.props.manifestoObject;
     var sequence = manifest.getSequenceByIndex(0);
-    var manifest = sequence.getManifestById(this.props.selectedManifestId);
+    var manifest = sequence.getManifestById(this.props.selectedManifestIndex);
     var activeManifestIndex = sequence.getManifestIndexById(manifest.id);
 
     // set the start and end indexes for the selected range of manifests in the state
@@ -227,7 +227,7 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedManifestId: state.manifestReducer.selectedManifestId
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex
     };
   }
 )(ManifestStrip);

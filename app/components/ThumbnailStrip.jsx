@@ -144,7 +144,14 @@ var ThumbnailStrip = React.createClass({
   updateSelectedCanvasIndexes: function(clickedCanvasIndex) {
     // get the index of the active canvas
     var manifest = this.props.manifestoObject;
-    var sequence = manifest.getSequenceByIndex(0);
+	var manifestIndex = this.props.selectedManifestIndex;
+	var sequence;
+	if(manifestIndex != null) {
+		manifests = manifesto.getManifests();
+		sequence = manifests[manifestIndex].getSequenceByIndex(0);
+	} else {
+        sequence = manifest.getSequenceByIndex(0);
+	}
     var canvas = sequence.getCanvasById(this.props.selectedCanvasId);
     var activeCanvasIndex = sequence.getCanvasIndexById(canvas.id);
 

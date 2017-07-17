@@ -44,13 +44,8 @@
     "deepcopy": "^0.6.3",
     "express": "^4.13.4",
     "font-awesome": "^4.6.3",
-<<<<<<< HEAD
     "json-loader": "^0.5.4",
     "manifesto.js": "0.2.1",
-=======
-    "manifesto": "2.0.7",
-    "manifesto.js": "https://github.com/viewdir/manifesto/archive/v2.0.7.tar.gz",
->>>>>>> Further development
     "multer": "^1.1.0",
     "openseadragon": "^2.2.1",
     "react": "15.3.2",
@@ -90,6 +85,7 @@
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
+    "uuid": "^3.1.0",
     "webpack": "^1.13.0"
   }
 }

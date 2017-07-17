@@ -5,6 +5,7 @@ var actions = require('actions');
 var manifesto = require('manifesto.js');
 var uuid = require('node-uuid');
 var Utils = require('Utils');
+var axios = require('axios');
 import LazyLoad from 'react-lazy-load';
 
 var ManifestStripCanvas = React.createClass({
@@ -69,8 +70,14 @@ var ManifestStripCanvas = React.createClass({
 //    return Math.round((manifest.getWidth() / manifest.getHeight()) * this.getDefaultThumbnailHeight());
   },
   getMainImage: function(manifest) {
+     axios.get(manifest.id).then(function(response) {
+              var data = response.data;
+              return data.thumbnail;
+     }).catch(function(err) {
+        return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
+     });
+
 //    return manifest.getImages().length > 0 ? manifest.getCanonicalImageUri(this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
-    return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
   },
   getMainImageLabel: function(manifest) {
     return manifest !== null ? Utils.getLocalizedPropertyValue(manifest.getLabel()) : 'Empty manifest';
@@ -149,7 +156,7 @@ var ManifestStripCanvas = React.createClass({
   },
   render: function() {
     var manifests = this.props.manifestoObject.getManifests();
-	var manifest = manifests[0];
+    var manifest = manifests[this.props.manifestIndex];
 		  
 //    this.props.manifestoObject.getManifestByIndex(this.props.manifestId).then(function(data) {
 //		manifest = data

@@ -4,7 +4,7 @@ var {connect} = require('react-redux');
 var actions = require('actions');
 var axios = require('axios');
 var EditableTextArea = require('EditableTextArea');
-var MetadataSidebarCanvas = require('MetadataSidebarCanvas');
+var MetadataSidebarCollectionManifest = require('MetadataSidebarCollectionManifest');
 var ManifestChoiceDialog = require('ManifestChoiceDialog');
 var uuid = require('node-uuid');
 var Utils = require('Utils');
@@ -82,6 +82,7 @@ var CollectionManifestMetadataPanel = React.createClass({
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />
+                  <MetadataSidebarCollectionManifest manifestIndex={index}/>
 		  <div className="row">
 		       <div className="col-md-12">
 		          <button onClick={this.openManifestChoiceDialog} className="btn btn-default center-block add-replace-image-on-canvas-button"><i className={manifest !== undefined ? 'fa fa-refresh' : 'fa fa-plus-circle'}></i> {manifest !== undefined ? 'Replace Manifest' : 'Add Manifest'}</button>

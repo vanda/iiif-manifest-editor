@@ -10,6 +10,7 @@ var stateDefaults = {
   manifestoObject: undefined,
   manifestFilenameToSave: 'manifest.json',
   metadataFieldValue: undefined,
+  selectedManifestIndex: undefined,
   selectedManifestId: undefined,
   selectedCanvasId: undefined,
   error: undefined,
@@ -303,6 +304,12 @@ export var manifestReducer = (state = stateDefaults, action) => {
         selectedCanvasId: action.selectedCanvasId,
         error: undefined
       });
+    case 'SET_SELECTED_MANIFEST_ID':
+      return Object.assign({}, state, {
+        ...state,
+        selectedManifestId: action.selectedManifestId,
+        error: undefined
+      });
     case 'SET_SELECTED_MANIFEST_INDEX':
       return Object.assign({}, state, {
         ...state,
@@ -360,6 +367,25 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         isFetchingImageAnnotation: false
       });
+    case 'ADD_MANIFEST_TO_COLLECTION':
+    case 'UPDATE_MANIFEST_IN_COLLECTION':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+      var manifest = updatedManifestData.manifests[action.manifestIndex];
+      manifest['@id'] = action.manifestUri;
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+      };
     case 'ADD_IMAGE_ANNOTATION_TO_CANVAS':
       // make a copy of the manifest data to update
       var updatedManifestData = {

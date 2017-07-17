@@ -134,6 +134,13 @@ export var setSelectedCanvasId = (selectedCanvasId) => {
   }
 };
 
+export var setSelectedManifestId = (selectedManifestId) => {
+  return {
+    type: 'SET_SELECTED_MANIFEST_ID',
+    selectedManifestId
+  }
+};
+
 export var setSelectedManifestIndex = (selectedManifestIndex) => {
   return {
     type: 'SET_SELECTED_MANIFEST_INDEX',
@@ -186,6 +193,14 @@ export var addManifestToCollection = (manifest, manifestIndex) => {
     type: 'ADD_MANIFEST_TO_COLLECTION',
     manifest,
     manifestIndex
+  };
+};
+
+export var updateManifestInCollection = (manifestIndex, manifestUri) => {
+  return {
+    type: 'UPDATE_MANIFEST_IN_COLLECTION',
+    manifestIndex,
+    manifestUri
   };
 };
 

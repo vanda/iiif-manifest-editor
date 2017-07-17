@@ -1,14 +1,14 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var SourceManifestWindow = require('SourceManifestWindow');
-var uuid = require('uuid');
+var uuid = require('uuid/v4');
 
 var SourceManifestBrowser = React.createClass({
   getInitialState: function() {
     var sourceManifests = (localStorage && localStorage.getItem('sourceManifests')) ? JSON.parse(localStorage.getItem('sourceManifests')) : [];
     return {
       sourceManifests: sourceManifests,
-      uuid: uuid()
+      uuid: uuidv4()
     }
   },
   addSourceManifestToState: function(manifestData) {
@@ -94,7 +94,7 @@ var SourceManifestBrowser = React.createClass({
   render: function() {
     var _this = this;
     return (
-      <div key={this.state.uuid} className="source-manifest-browser" ref="manifestBrowser">
+      <div key={this.state.uuidv4} className="source-manifest-browser" ref="manifestBrowser">
         { this.renderOpenSequenceMessage() }
         {
           this.state.sourceManifests.map(function(manifestData, manifestIndex) {

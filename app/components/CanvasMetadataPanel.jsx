@@ -6,7 +6,7 @@ var axios = require('axios');
 var EditableTextArea = require('EditableTextArea');
 var MetadataSidebarCanvas = require('MetadataSidebarCanvas');
 var ImageAnnotationChoiceDialog = require('ImageAnnotationChoiceDialog');
-var uuid = require('uuid');
+var uuidv4 = require('uuid/v4');
 var Utils = require('Utils');
 
 var CanvasMetadataPanel = React.createClass({
@@ -108,7 +108,7 @@ var CanvasMetadataPanel = React.createClass({
         // create an image annotation from the following template
         var imageAnnotation = {
           "@context":"http://iiif.io/api/presentation/2/context.json",
-          "@id": "http://" + uuid(),
+          "@id": "http://" + uuidv4(),
           "@type": "oa:Annotation",
           "motivation": "sc:painting",
           "resource": {

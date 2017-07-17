@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var ManifestStripCanvas = require('ManifestStripCanvas');
-var uuid = require('node-uuid');
+var uuid = require('uuid/v4');
 var {SortableItems, SortableItem} = require('react-sortable-component');
 var OnScreenHelp = require('OnScreenHelp');
 
@@ -60,7 +60,7 @@ var ManifestStrip = React.createClass({
     var targetManifestIndex = this.props.manifestoObject.getManifests().length;
     var emptyManifest = {
       "@context": "http://iiif.io/api/presentation/2/context.json",
-          "@id": "http://" + uuid(),
+          "@id": "http://example.org/" + uuidv4(),
           "@type": "sc:Manifest",
           "label": "[Click to edit label]",
       "metadata": [],

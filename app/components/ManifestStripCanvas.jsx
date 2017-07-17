@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var manifesto = require('manifesto.js');
-var uuid = require('node-uuid');
+var uuidv4 = require('uuid/v4');
 var Utils = require('Utils');
 var axios = require('axios');
 import LazyLoad from 'react-lazy-load';
@@ -70,14 +70,25 @@ var ManifestStripCanvas = React.createClass({
 //    return Math.round((manifest.getWidth() / manifest.getHeight()) * this.getDefaultThumbnailHeight());
   },
   getMainImage: function(manifest) {
-     axios.get(manifest.id).then(function(response) {
+	 if(manifest.id.substr(0,19) !== 'http://example.org/') {
+       axios.get(manifest.id).then(function(response) {
               var data = response.data;
-              return data.thumbnail;
-     }).catch(function(err) {
+		      if('thumbnail' in data) {
+                return data.thumbnail;
+			  } else {
+				var collectionManifestoObject = manifesto.create(JSON.stringify(data));
+				var canvas = collectionManifestoObject.getSequenceByIndex(0).getCanvasByIndex(0);
+				var img = canvas.getImages().length > 0 ? canvas.getCanonicalImageUri(150) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150';
+				return img;
+			  }
+				
+       }).catch(function(err) {
         return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
-     });
+       });
+	 } else {
+        return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
+	 }
 
-//    return manifest.getImages().length > 0 ? manifest.getCanonicalImageUri(this.getDefaultThumbnailHeight()) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
   },
   getMainImageLabel: function(manifest) {
     return manifest !== null ? Utils.getLocalizedPropertyValue(manifest.getLabel()) : 'Empty manifest';
@@ -86,7 +97,7 @@ var ManifestStripCanvas = React.createClass({
     // dispatch an action to add an empty manifest to the left of the given manifest
     var {dispatch, manifestIndex} = this.props;
     var emptyManifest = {
-      "@id": "http://" + uuid(),
+      "@id": "http://example.org/" + uuidv4(),
       "@type": "sc:Manifest",
       "label": "Empty manifest",
       "height": 0,
@@ -99,7 +110,7 @@ var ManifestStripCanvas = React.createClass({
     // dispatch an action to add an empty manifest to the left of the given manifest
     var {dispatch, manifestIndex} = this.props;
     var emptyManifest = {
-      "@id": "http://" + uuid(),
+      "@id": "http://example.org/" + uuidv4(),
       "@type": "sc:Manifest",
       "label": "Empty manifest",
       "height": 0,
@@ -185,7 +196,7 @@ var ManifestStripCanvas = React.createClass({
           </ul>
         </span>
         <div style={manifestStyle} className={this.setActiveClass()} onClick={this.handleManifestClick}>
-          <LazyLoad offsetHorizontal={600}>
+          <LazyLoad offsetHorizontal={600} resize={true}>
             <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src={this.getMainImage(manifest)} data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
           </LazyLoad>
           <div className="manifest-label" title={this.getMainImageLabel(manifest)}>

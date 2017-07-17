@@ -1,5 +1,5 @@
 var manifesto = require('manifesto.js');
-var uuid = require('uuid');
+var uuid = require('uuid/v4');
 var deepcopy = require('deepcopy');
 
 var stateDefaults = {
@@ -232,7 +232,7 @@ export var manifestReducer = (state = stateDefaults, action) => {
         var canvas = updatedManifestData.sequences[0].canvases[canvasIndex];
         if(canvas['@id'] === action.canvas['@id']) {
           // generate a unique uuid for the newly added canvas
-          var newCanvasId = "http://" + uuid();
+          var newCanvasId = "http://" + uuidv4();
 
           // update the canvas id with the new uuid
           action.canvas['@id'] = newCanvasId;
@@ -266,7 +266,7 @@ export var manifestReducer = (state = stateDefaults, action) => {
       var duplicatedCanvas = deepcopy(state.manifestData.sequences[0].canvases[action.canvasIndex]);
 
       // update fields in the duplicated canvas object that need to be modified
-      duplicatedCanvas['@id'] = "http://" + uuid();
+      duplicatedCanvas['@id'] = "http://" + uuidv4();
 
       // insert the new canvas record to the right of the current canvas
       updatedManifestData.sequences[0].canvases.splice(action.canvasIndex + 1, 0, duplicatedCanvas);

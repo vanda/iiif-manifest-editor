@@ -2,14 +2,14 @@ var React = require('react');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var manifesto = require('manifesto.js');
-var uuid = require('node-uuid');
+var uuidv4 = require('uuid/v4');
 
 var NewCollection = React.createClass({
   componentDidMount: function() {
     // set up manifest skeleton
     var emptyCollection = {
       "@context": "http://iiif.io/api/presentation/2/context.json",
-  	  "@id": "http://" + uuid(),
+  	  "@id": "http://" + uuidv4(),
   	  "@type": "sc:Collection",
   	  "label": "[Click to edit label]",
       "metadata": [],
@@ -47,7 +47,7 @@ var NewCollection = React.createClass({
       ],
       "manifests": [
           {
-             "@id": "http://" + uuid(),
+             "@id": "http://example.org/" + uuidv4(),
              "@type": "sc:Manifest",
              "label": "[Click to edit label]",
           }

@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var ThumbnailStripCanvas = require('ThumbnailStripCanvas');
-var uuid = require('uuid');
+var uuidv4 = require('uuid/v4');
 var {SortableItems, SortableItem} = require('react-sortable-component');
 var OnScreenHelp = require('OnScreenHelp');
 
@@ -76,7 +76,7 @@ var ThumbnailStrip = React.createClass({
     // dispatch action to add empty canvas to end of sequence
     var targetCanvasIndex = this.props.manifestoObject.getSequenceByIndex(0).getCanvases().length;
     var emptyCanvas = {
-      "@id": "http://" + uuid(),
+      "@id": "http://" + uuidv4(),
       "@type": "sc:Canvas",
       "label": "Empty canvas",
       "height": 0,

@@ -6,7 +6,6 @@ var axios = require('axios');
 var EditableTextArea = require('EditableTextArea');
 var MetadataSidebarCollectionManifest = require('MetadataSidebarCollectionManifest');
 var ManifestChoiceDialog = require('ManifestChoiceDialog');
-var uuid = require('node-uuid');
 var Utils = require('Utils');
 
 var CollectionManifestMetadataPanel = React.createClass({
@@ -48,7 +47,8 @@ var CollectionManifestMetadataPanel = React.createClass({
   },
   isIiifManifestUri: function(uri) {
     // TODO: implement more robust IIIF image URI validation
-    return uri.substr(-14) === '/manifest.json';
+    // return uri.substr(-14) === '/manifest.json';
+	return true;
   },
   handleManifestUri: function(manifestUri) {
     var {dispatch, selectedManifestIndex} = this.props;

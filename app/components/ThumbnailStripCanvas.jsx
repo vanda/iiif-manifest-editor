@@ -3,7 +3,11 @@ var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var manifesto = require('manifesto.js');
+<<<<<<< HEAD
 var uuid = require('uuid');
+=======
+var uuid = require('uuid/v4');
+>>>>>>> Various updates, still no working images
 var Utils = require('Utils');
 import LazyLoad from 'react-lazy-load';
 
@@ -79,7 +83,7 @@ var ThumbnailStripCanvas = React.createClass({
     // dispatch an action to add an empty canvas to the left of the given canvas
     var {dispatch, canvasIndex} = this.props;
     var emptyCanvas = {
-      "@id": "http://" + uuid(),
+      "@id": "http://" + uuidv4(),
       "@type": "sc:Canvas",
       "label": "Empty canvas",
       "height": 0,
@@ -92,7 +96,7 @@ var ThumbnailStripCanvas = React.createClass({
     // dispatch an action to add an empty canvas to the left of the given canvas
     var {dispatch, canvasIndex} = this.props;
     var emptyCanvas = {
-      "@id": "http://" + uuid(),
+      "@id": "http://" + uuidv4(),
       "@type": "sc:Canvas",
       "label": "Empty canvas",
       "height": 0,

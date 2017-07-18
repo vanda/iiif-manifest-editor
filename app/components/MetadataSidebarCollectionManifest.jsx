@@ -3,6 +3,8 @@ var {connect} = require('react-redux');
 var manifesto = require('manifesto.js');
 var Utils = require('Utils');
 var axios = require('axios');
+import Async from 'react-promise'
+
 
 var MetadataSidebarCollectionManifest = React.createClass({
   getMainImage: function(manifest) {
@@ -24,17 +26,28 @@ var MetadataSidebarCollectionManifest = React.createClass({
   },
   render: function() {
     var manifest = this.props.manifestoObject.getManifests()[this.props.manifestIndex];
-    <Async before={(handlePromise) => {
-      return (
+	manifest.id = "https://data.getty.edu/museum/api/iiif/124/manifest.json";
+	var imageSrc = this.getMainImage(manifest);
+
+	  return (
+	  <Async promise={imageSrc} then={(img) => {
         <div style={{background: '#fff url(./img/loading-small.gif) no-repeat center center'}} className="metadata-sidebar-canvas">
-        <img src={handlePromise(this.getMainImage(manifest))} alt={Utils.getLocalizedPropertyValue(manifest.getLabel())} height="150" />
-        <div className="canvas-label">
-          {manifest.id}
+          <img src={img} alt={Utils.getLocalizedPropertyValue(manifest.getLabel())} height="150" />
+          <div className="canvas-label">
+            {manifest.id}
+          </div>
         </div>
-      </div>
-    );
-  }}
-  />
+	  }} before={(handlePromise) => {
+        <div style={{background: '#fff url(./img/loading-small.gif) no-repeat center center'}} className="metadata-sidebar-canvas">
+          <img src={handlePromise(this.getMainImage(manifest))} alt={Utils.getLocalizedPropertyValue(manifest.getLabel())} height="150" />
+          <div className="canvas-label">
+            {manifest.id}
+          </div>
+        </div>
+	  }}
+	  />
+     );
+  }
 });
 
 module.exports = connect(

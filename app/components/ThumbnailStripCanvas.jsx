@@ -3,11 +3,7 @@ var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
 var manifesto = require('manifesto.js');
-<<<<<<< HEAD
-var uuid = require('uuid');
-=======
-var uuid = require('uuid/v4');
->>>>>>> Various updates, still no working images
+var uuidv4 = require('uuid/v4');
 var Utils = require('Utils');
 import LazyLoad from 'react-lazy-load';
 

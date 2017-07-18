@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var SourceManifestWindow = require('SourceManifestWindow');
-var uuid = require('uuid/v4');
+var uuidv4 = require('uuid/v4');
 
 var SourceManifestBrowser = React.createClass({
   getInitialState: function() {

@@ -7,6 +7,7 @@ var uuidv4 = require('uuid/v4');
 var Utils = require('Utils');
 var axios = require('axios');
 import LazyLoad from 'react-lazy-load';
+import Async from 'react-promise'
 
 var ManifestStripCanvas = React.createClass({
   getInitialState: function() {
@@ -71,7 +72,7 @@ var ManifestStripCanvas = React.createClass({
   },
   getMainImage: function(manifest) {
 	 if(manifest.id.substr(0,19) !== 'http://example.org/') {
-       axios.get(manifest.id).then(function(response) {
+           return axios.get(manifest.id).then(function(response) {
               var data = response.data;
 		      if('thumbnail' in data) {
                 return data.thumbnail;
@@ -86,7 +87,7 @@ var ManifestStripCanvas = React.createClass({
         return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
        });
 	 } else {
-        return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
+        return Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150');
 	 }
 
   },
@@ -197,7 +198,11 @@ var ManifestStripCanvas = React.createClass({
         </span>
         <div style={manifestStyle} className={this.setActiveClass()} onClick={this.handleManifestClick}>
           <LazyLoad offsetHorizontal={600} resize={true}>
-            <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src={this.getMainImage(manifest)} data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
+          <Async promise={this.getMainImage(manifest)} then={(img) => {
+            return <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src={img} data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
+          }} pendingRender={ 
+            <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src="https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150" data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
+          } />
           </LazyLoad>
           <div className="manifest-label" title={this.getMainImageLabel(manifest)}>
             <span>{this.stringTruncate(this.getMainImageLabel(manifest), 20)}</span>

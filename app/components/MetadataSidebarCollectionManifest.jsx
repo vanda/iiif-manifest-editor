@@ -9,7 +9,7 @@ import Async from 'react-promise'
 var MetadataSidebarCollectionManifest = React.createClass({
   getMainImage: function(manifest) {
     if(manifest.id.substr(0,19) !== 'http://example.org/') {
-       axios.get(manifest.id).then(function(response) {
+       return axios.get(manifest.id).then(function(response) {
          var data = response.data;
          if('thumbnail' in data) {
            return data.thumbnail;
@@ -21,30 +21,31 @@ var MetadataSidebarCollectionManifest = React.createClass({
          }
        });
     } else {
-      return 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150';
+      return Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150');
     }
   },
   render: function() {
     var manifest = this.props.manifestoObject.getManifests()[this.props.manifestIndex];
-	manifest.id = "https://data.getty.edu/museum/api/iiif/124/manifest.json";
-	var imageSrc = this.getMainImage(manifest);
+//manifest.id = "https://data.getty.edu/museum/api/iiif/124/manifest.json";
+    var imageSrc = this.getMainImage(manifest);
 
 	  return (
 	  <Async promise={imageSrc} then={(img) => {
+           return (
         <div style={{background: '#fff url(./img/loading-small.gif) no-repeat center center'}} className="metadata-sidebar-canvas">
           <img src={img} alt={Utils.getLocalizedPropertyValue(manifest.getLabel())} height="150" />
           <div className="canvas-label">
             {manifest.id}
           </div>
         </div>
-	  }} before={(handlePromise) => {
-        <div style={{background: '#fff url(./img/loading-small.gif) no-repeat center center'}} className="metadata-sidebar-canvas">
-          <img src={handlePromise(this.getMainImage(manifest))} alt={Utils.getLocalizedPropertyValue(manifest.getLabel())} height="150" />
+           );
+	  }} pendingRender={
+                <div style={{background: '#fff url(./img/loading-small.gif) no-repeat center center'}} className="metadata-sidebar-canvas">
           <div className="canvas-label">
             {manifest.id}
           </div>
         </div>
-	  }}
+          } 
 	  />
      );
   }

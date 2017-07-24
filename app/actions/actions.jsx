@@ -105,6 +105,23 @@ export var addEmptyManifestAtIndex = (emptyManifest, manifestIndex) => {
   }
 };
 
+export var addEmptyCollectionManifestAtIndex = (emptyManifest, collectionIndex, manifestIndex) => {
+  return {
+    type: 'ADD_EMPTY_COLLECTION_MANIFEST_AT_INDEX',
+    emptyManifest,
+    collectionIndex,
+    manifestIndex
+  }
+};
+
+export var addEmptyCollectionAtIndex = (emptyCollection, collectionIndex) => {
+  return {
+    type: 'ADD_EMPTY_COLLECTION_AT_INDEX',
+    emptyCollection,
+    collectionIndex
+  }
+};
+
 export var addCanvasAtIndex = (canvas, canvasIndex) => {
   return {
     type: 'ADD_CANVAS_AT_INDEX',
@@ -127,6 +144,21 @@ export var deleteCanvasAtIndex = (canvasIndex) => {
   }
 };
 
+export var deleteManifestAtIndex = (manifestIndex) => {
+  return {
+    type: 'DELETE_MANIFEST_AT_INDEX',
+    manifestIndex
+  }
+};
+
+export var deleteCollectionManifestAtIndex = (collectionIndex, manifestIndex) => {
+  return {
+    type: 'DELETE_COLLECTION_MANIFEST_AT_INDEX',
+	collectionIndex,
+    manifestIndex
+  }
+};
+
 export var setSelectedCanvasId = (selectedCanvasId) => {
   return {
     type: 'SET_SELECTED_CANVAS_ID',
@@ -145,6 +177,13 @@ export var setSelectedManifestIndex = (selectedManifestIndex) => {
   return {
     type: 'SET_SELECTED_MANIFEST_INDEX',
     selectedManifestIndex
+  }
+};
+
+export var setSelectedCollectionIndex = (selectedCollectionIndex) => {
+  return {
+    type: 'SET_SELECTED_COLLECTION_INDEX',
+    selectedCollectionIndex
   }
 };
 
@@ -204,6 +243,15 @@ export var updateManifestInCollection = (manifestIndex, manifestUri) => {
   };
 };
 
+export var updateCollectionManifestInCollection = (manifestIndex, collectionIndex, manifestUri) => {
+  return {
+    type: 'UPDATE_COLLECTION_MANIFEST_IN_COLLECTION',
+    manifestIndex,
+	collectionIndex,
+    manifestUri
+  };
+};
+
 export var setShowMetadataSidebar = (showMetadataSidebar) => {
   return {
     type: 'SET_SHOW_METADATA_SIDEBAR',
@@ -224,6 +272,26 @@ export var renameCanvasLabelsByFoliation = (canvasIndexOffset, startWithFoliatio
     canvasIndexOffset,
     startWithFoliationSide
   };
+};
+
+export var setTreeData  = (treeData) => {
+  return {
+    type: 'SET_TREE_DATA',
+    treeData
+  }
+};
+
+export var addCollectionTreeManifest = (manifestLabel) => {
+	return {
+		type: 'ADD_COLLECTION_TREE_MANIFEST',
+		manifestLabel
+	};
+};
+export var addCollectionTreeCollection = (collectionLabel) => {
+	return {
+		type: 'ADD_COLLECTION_TREE_COLLECTION',
+		collectionLabel
+	};
 };
 
 export var setError = (errorType, errorMessage) => {

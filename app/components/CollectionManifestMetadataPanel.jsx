@@ -9,6 +9,21 @@ var ManifestChoiceDialog = require('ManifestChoiceDialog');
 var Utils = require('Utils');
 
 var CollectionManifestMetadataPanel = React.createClass({
+  getInitialState: function() {
+
+      var emptyTree = [{ title: 'Top Collection', expanded: true, key: 0, 
+		  children: [
+                  { title: 'Manifests', expanded: true, type: 'manifests', key: 1, children: [
+                  { title: 'Empty Manifest', type: 'manifest' } ] },
+                  { title: 'Collections', type: 'collections', expanded: true, children: [] },
+                  { title: 'Members', type: 'members' }] } ];
+
+      this.props.dispatch(actions.setTreeData(emptyTree));
+
+	  return null;
+  },
+
+
   saveMetadataFieldToStore: function(fieldValue, path, fieldName) {
     this.props.dispatch(actions.updateMetadataFieldValueAtPath(fieldValue, path));
   },
@@ -51,7 +66,7 @@ var CollectionManifestMetadataPanel = React.createClass({
 	return true;
   },
   handleManifestUri: function(manifestUri) {
-    var {dispatch, selectedManifestIndex} = this.props;
+    var {dispatch, selectedManifestIndex, selectedCollectionIndex} = this.props;
     var that = this;
     // check if the entered URI is a valid IIIF Image API URI; if not, check if it redirects to one
     if(this.isIiifManifestUri(manifestUri)) {
@@ -59,7 +74,13 @@ var CollectionManifestMetadataPanel = React.createClass({
       this.createImageAnnotationFromInfoJsonUri(infoJsonUri);
        axios.get(manifestUri)
         .then(function(response) {
-           dispatch(actions.addManifestToCollection(response.data, selectedCanvasIndex));
+		   if(selectedCollectionIndex == undefined) {
+             dispatch(actions.updateManifestInCollection(selectedManifestIndex, manifestUri));
+		     dispatch(actions.addCollectionTreeManifest("New Label"));
+		   } else {
+             dispatch(actions.updateCollectionManifestInCollection(selectedManifestIndex, selectedCollectionIndex, manifestUri));
+		     dispatch(actions.addCollectionTreeManifest("New Label"));
+		   }
 		});
     }
   },
@@ -74,7 +95,15 @@ var CollectionManifestMetadataPanel = React.createClass({
       this.handleManifestUri(uri);
   },
   render: function() {
-    var manifests = this.props.manifestoObject.getManifests();
+    var manifests;
+	var {selectedCollectionIndex} = this.props;
+	
+	if(selectedCollectionIndex == undefined) {
+		manifests = this.props.manifestoObject.getManifests();
+	} else {
+		manifests = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests();
+	}
+
     if(manifests.length > 0) {
 	  var index = this.props.selectedManifestIndex || 0;
       var manifest = manifests[index];
@@ -82,7 +111,7 @@ var CollectionManifestMetadataPanel = React.createClass({
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />
-                  <MetadataSidebarCollectionManifest manifestIndex={index}/>
+                  <MetadataSidebarCollectionManifest collectionIndex={selectedCollectionIndex} manifestIndex={index}/>
 		  <div className="row">
 		       <div className="col-md-12">
 		          <button onClick={this.openManifestChoiceDialog} className="btn btn-default center-block add-replace-image-on-canvas-button"><i className={manifest !== undefined ? 'fa fa-refresh' : 'fa fa-plus-circle'}></i> {manifest !== undefined ? 'Replace Manifest' : 'Add Manifest'}</button>
@@ -98,7 +127,7 @@ var CollectionManifestMetadataPanel = React.createClass({
           </dl>
         </div>
       );
-    } else if(this.props.manifestoObject.getManifests().length < 1) {
+    } else if(manifests.length < 1) {
       return (
         <div>
           This collection does not have any manifests.
@@ -120,6 +149,7 @@ module.exports = connect(
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
       selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
+      selectedCollectionIndex: state.manifestReducer.selectedCollectionIndex,
       error: state.manifestReducer.error
     };
   }

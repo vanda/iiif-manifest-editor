@@ -1,8 +1,8 @@
 var React = require('react');
-var CollectionMetadataPanelPredefinedFields = require('CollectionMetadataPanelPredefinedFields');
-var CollectionMetadataPanelCustomFields = require('CollectionMetadataPanelCustomFields');
+var SubCollectionMetadataPanelPredefinedFields = require('SubCollectionMetadataPanelPredefinedFields');
+var SubCollectionMetadataPanelCustomFields = require('SubCollectionMetadataPanelCustomFields');
 
-var CollectionMetadataPanelTabs = React.createClass({
+var SubCollectionMetadataPanelTabs = React.createClass({
   render: function() {
     return (
       <div>
@@ -16,10 +16,10 @@ var CollectionMetadataPanelTabs = React.createClass({
         </div>
         <div className="tab-content">
           <div className="tab-pane active" id="predefined-fields">
-            <CollectionMetadataPanelPredefinedFields collectionIndex={this.props.collectionIndex} />
+            <SubCollectionMetadataPanelPredefinedFields collectionIndex={this.props.collectionIndex} />
           </div>
           <div className="tab-pane" id="custom-fields">
-            <CollectionMetadataPanelCustomFields/>
+            <SubCollectionMetadataPanelCustomFields/>
           </div>
         </div>
       </div>
@@ -27,4 +27,4 @@ var CollectionMetadataPanelTabs = React.createClass({
   }
 });
 
-module.exports = CollectionMetadataPanelTabs;
+module.exports = SubCollectionMetadataPanelTabs;

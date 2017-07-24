@@ -1,12 +1,19 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var CollectionMetadataPanel = require('CollectionMetadataPanel');
+var SubCollectionMetadataPanel = require('SubCollectionMetadataPanel');
 var CollectionManifestMetadataPanel = require('CollectionManifestMetadataPanel');
 var BulkActionsPanel = require('BulkActionsPanel');
 var OnScreenHelp = require('OnScreenHelp');
+var CollectionTree = require('CollectionTree');
+var {connect} = require('react-redux');
+var actions = require('actions');
+
 
 var CollectionMetadataAccordion = React.createClass({
   getInitialState: function() {
+
+
     return {
       helpSection: ''
     }
@@ -35,13 +42,39 @@ var CollectionMetadataAccordion = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-manifest-tree"><i className="fa fa-sitemap"></i> Collection Tree</a>
+              <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
+            </h4>
+          </div>
+          <div id="collapse-manifest-tree" className={this.setMetadataPanelClasses('manifestTree')}>
+            <div className="panel-body">
+		         <CollectionTree/>
+            </div>
+          </div>
+        </div>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h4 className="panel-title">
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-manifest-top"><i className="fa fa-book"></i> Top Metadata</a>
+              <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
+            </h4>
+          </div>
+          <div id="collapse-manifest-top" className={this.setMetadataPanelClasses('manifestTop')}>
+            <div className="panel-body">
+              <CollectionMetadataPanel/>
+            </div>
+          </div>
+        </div>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h4 className="panel-title">
               <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-manifest-metadata"><i className="fa fa-book"></i> Collection Metadata</a>
               <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
             </h4>
           </div>
           <div id="collapse-manifest-metadata" className={this.setMetadataPanelClasses('manifestMetadata')}>
             <div className="panel-body">
-              <CollectionMetadataPanel/>
+              <SubCollectionMetadataPanel collectionIndex={0} />
             </div>
           </div>
         </div>

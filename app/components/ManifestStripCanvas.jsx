@@ -127,11 +127,14 @@ var ManifestStripCanvas = React.createClass({
   },
   deleteManifest: function() {
     // dispatch an action to delete the manifest at the given index from the thumbnail strip
-    var {dispatch, manifestIndex} = this.props;
-    if (manifestIndex == this.props.manifestoObject.getSequenceByIndex(0).getManifestIndexById(this.props.selectedManifestId)) {
+    var {dispatch, manifestIndex, selectedCollectionIndex} = this.props;
+	if (selectedCollectionIndex == undefined) {
       dispatch(actions.setSelectedManifestId(undefined));
+      dispatch(actions.deleteManifestAtIndex(manifestIndex));
+	} else {
+      dispatch(actions.setSelectedManifestId(undefined));
+      dispatch(actions.deleteCollectionManifestAtIndex(selectedcollectionIndex, manifestIndex));
     }
-    dispatch(actions.deleteManifestAtIndex(manifestIndex));
   },
   openDeleteManifestConfirmationDialog: function() {
     if(confirm('Are you sure you want to delete this manifest?')) {
@@ -167,7 +170,14 @@ var ManifestStripCanvas = React.createClass({
     $manifestLabel.css('width', ($image.width() + 10));
   },
   render: function() {
-    var manifests = this.props.manifestoObject.getManifests();
+
+    var manifests;
+
+	if(this.props.topLevel == true || this.props.collectionIndex == undefined) {
+		manifests = this.props.manifestoObject.getManifests();
+	} else {
+		manifests = this.props.manifestoObject.getCollections()[this.props.collectionIndex].getManifests();
+	}
     var manifest = manifests[this.props.manifestIndex];
 		  
 //    this.props.manifestoObject.getManifestByIndex(this.props.manifestId).then(function(data) {
@@ -201,7 +211,7 @@ var ManifestStripCanvas = React.createClass({
           <Async promise={this.getMainImage(manifest)} then={(img) => {
             return <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src={img} data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
           }} pendingRender={ 
-            <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src="https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150" data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
+            <img onLoad={this.updateManifestWidth} className={this.setSelectedClass()} src="https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150" data-manifest-index={this.props.manifestIndex} alt={this.getMainImageLabel(manifest)} />
           } />
           </LazyLoad>
           <div className="manifest-label" title={this.getMainImageLabel(manifest)}>

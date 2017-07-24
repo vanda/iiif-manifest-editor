@@ -57,7 +57,8 @@ var ManifestStrip = React.createClass({
   },
   appendEmptyManifestToSequence: function() {
     // dispatch action to add empty manifest to end of sequence
-    var targetManifestIndex = this.props.manifestoObject.getManifests().length;
+    var targetManifestIndex;
+	var {selectedCollectionIndex} = this.props;
     var emptyManifest = {
       "@context": "http://iiif.io/api/presentation/2/context.json",
           "@id": "http://example.org/" + uuidv4(),
@@ -88,7 +89,17 @@ var ManifestStrip = React.createClass({
           "structures": []
     };
 
-    this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
+	if(selectedCollectionIndex == undefined) {
+		targetManifestIndex = this.props.manifestoObject.getManifests().length;
+	} else {
+		targetManifestIndex = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests().length;
+	}
+
+	if(this.props.selectedCollectionIndex == undefined) {
+      this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
+	} else {
+      this.props.dispatch(actions.addEmptyCollectionManifestAtIndex(emptyManifest, this.props.selectedCollectionIndex, targetManifestIndex));
+	}
   },
   addManifests: function(e) {
     // stops browsers from redirecting
@@ -194,10 +205,28 @@ var ManifestStrip = React.createClass({
   },
   render: function() {
     var _this = this;
+
+	var manifests;
+
+	if(this.props.topLevel != true && this.props.selectedCollectionIndex != undefined) {
+		var collection = this.props.manifestoObject.getCollections()[this.props.selectedCollectionIndex];
+		manifests = collection.getManifests();
+	} else if(this.props.noSelectedCollection == true) {
+			return (
+               <div className="thumbnail-strip-container"> 
+                    <div className="alert alert-danger">
+				       Select Collection First
+				    </div>
+			   </div>
+			);
+	} else {
+		manifests = this.props.manifestoObject.getManifests();
+	}
+
     return (
       <div className="thumbnail-strip-container" onDragOver={this.cancelDragOver} onDrop={this.addManifests}>
         <OnScreenHelp ref="onScreenHelp" section={this.state.helpSection} />
-        <div className="alert alert-danger delete-selected-manifests-prompt" ref="deleteSelectedManifestPrompt">
+        <div className="alert alert-danger delete-selected-canvases-prompt" ref="deleteSelectedManifestPrompt">
           Delete selected manifests?
           <button type="button" className="btn btn-default" onClick={this.deleteSelectedManifests}><i className="fa fa-check"></i> OK</button>
           <button type="button" className="btn btn-default" onClick={this.deSelectManifests}><i className="fa fa-times"></i> Cancel</button>
@@ -205,10 +234,10 @@ var ManifestStrip = React.createClass({
         <a className="help-icon" href="javascript:;" onClick={() => this.showHelp('ManifestStrip')} ><i className="fa fa-question-circle-o"></i></a>
         <SortableItems name="simple-sort" onSort={this.handleSort}>
           {
-            this.props.manifestoObject.getSequenceByIndex(0).getCanvases().map(function(canvas, canvasIndex) {
+            manifests.map(function(manifest, manifestIndex) {
               return (
-                <SortableItem key={canvasIndex} draggable={true} className="simple-sort-item">
-                  <ManifestStripCanvas key={canvasIndex} canvasIndex={canvasIndex} canvasId={canvas.id} isSelectedCanvas={_this.isCanvasSelected(canvasIndex)} onCanvasNormalClick={_this.deSelectCanvases} onCanvasShiftClick={_this.updateSelectedCanvasIndexes} />
+                <SortableItem key={manifestIndex} draggable={true} className="simple-sort-item">
+                  <ManifestStripCanvas key={manifestIndex} manifestIndex={manifestIndex} manifestId={manifest.id} collectionIndex={_this.props.selectedCollectionIndex} isSelectedManifest={_this.isManifestSelected(manifestIndex)} topLevel={_this.props.topLevel} onManifestNormalClick={_this.deSelectManifests} onManifestShiftClick={_this.updateSelectedManifestIndexes} />
                 </SortableItem>
               );
             })
@@ -227,7 +256,8 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedManifestIndex: state.manifestReducer.selectedManifestIndex
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
+      selectedCollectionIndex: state.manifestReducer.selectedCollectionIndex
     };
   }
 )(ManifestStrip);

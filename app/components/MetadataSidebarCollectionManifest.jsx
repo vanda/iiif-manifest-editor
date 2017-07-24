@@ -25,7 +25,13 @@ var MetadataSidebarCollectionManifest = React.createClass({
     }
   },
   render: function() {
-    var manifest = this.props.manifestoObject.getManifests()[this.props.manifestIndex];
+	var manifest;
+	if(this.props.collectionIndex == undefined) {
+      manifest = this.props.manifestoObject.getManifests()[this.props.manifestIndex];
+	} else {
+      var collection = this.props.manifestoObject.getCollections()[this.props.collectionIndex];
+	  manifest = collection.getManifests()[this.props.manifestIndex];
+	}
 //manifest.id = "https://data.getty.edu/museum/api/iiif/124/manifest.json";
     var imageSrc = this.getMainImage(manifest);
 

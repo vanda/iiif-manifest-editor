@@ -31,7 +31,7 @@ var Home = (props) => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <Link to="/collection/edit" className="btn btn-default"><i className="fa fa-file"></i> Edit Collection</Link>
+            <Link to="/collection/open" className="btn btn-default"><i className="fa fa-file"></i> Open Collection</Link>
           </div>
         </div>
         <div id="bodleian-logo">

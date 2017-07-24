@@ -5,7 +5,7 @@ var CollectionMetadataPanel = React.createClass({
   render: function() {
     return (
       <div className="metadata-sidebar-panel">
-        <CollectionMetadataPanelTabs/>
+        <CollectionMetadataPanelTabs collectionIndex={this.props.collectionIndex}/>
       </div>
     );
   }

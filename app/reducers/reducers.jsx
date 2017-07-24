@@ -1,6 +1,8 @@
 var manifesto = require('manifesto.js');
 var uuid = require('uuid/v4');
 var deepcopy = require('deepcopy');
+import addNodeUnderParent from "react-sortable-tree";
+import getFlatDataFromTree from "react-sortable-tree";
 
 var stateDefaults = {
   isFetchingLocalManifest: false,
@@ -14,8 +16,12 @@ var stateDefaults = {
   selectedManifestId: undefined,
   selectedCanvasId: undefined,
   error: undefined,
-  showMetadataSidebar: true
+  showMetadataSidebar: true,
+  treeData: undefined
 }
+
+const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
+const keyFromKey = ({ node }) => node.key;
 
 export var manifestReducer = (state = stateDefaults, action) => {
   switch (action.type) {
@@ -185,6 +191,24 @@ export var manifestReducer = (state = stateDefaults, action) => {
         manifestoObject: updatedManifestoObject,
         manifestData: updatedManifestData
       };
+    case 'ADD_EMPTY_COLLECTION_AT_INDEX':
+      // make a copy of the manifest data to update
+      var updatedCollectionData = {
+        ...state.manifestData
+      };
+
+      // insert the empty collection at the given index in the sequence
+      updatedCollectionData.collections.splice(action.collectionIndex, 0, action.emptyCollection);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedCollectionData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedCollectionData
+      };
     case 'ADD_EMPTY_MANIFEST_AT_INDEX':
       // make a copy of the manifest data to update
       var updatedCollectionData = {
@@ -193,6 +217,28 @@ export var manifestReducer = (state = stateDefaults, action) => {
 
       // insert the empty manifest at the given index in the sequence
       updatedCollectionData.manifests.splice(action.manifestIndex, 0, action.emptyManifest);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedCollectionData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedCollectionData
+      };
+    case 'ADD_EMPTY_COLLECTION_MANIFEST_AT_INDEX':
+      // make a copy of the manifest data to update
+      var updatedCollectionData = {
+        ...state.manifestData
+      };
+
+	  if(updatedCollectionData.collections[action.collectionIndex].manifests.length == 0) {
+         updatedCollectionData.collections[action.collectionIndex].manifests.push(action.emptyManifest);
+	  } else {
+      // insert the empty manifest at the given index in the sequence
+      updatedCollectionData.collections[action.collectionIndex].manifests.splice(action.manifestIndex, 0, action.emptyManifest);
+	  }
 
       // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
       var updatedManifestoObject = manifesto.create(JSON.stringify(updatedCollectionData));
@@ -298,6 +344,43 @@ export var manifestReducer = (state = stateDefaults, action) => {
         manifestoObject: updatedManifestoObject,
         manifestData: updatedManifestData
       };
+    case 'DELETE_MANIFEST_AT_INDEX':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+      // delete the manifest at the given index from the first sequence
+      updatedManifestData.manifests.splice(action.manifestIndex, 1);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+      };
+    case 'DELETE_COLLECTION_MANIFEST_AT_INDEX':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+      // delete the manifest at the given index from the first sequence
+      var collection = updatedManifestData.collections[action.collectionIndex];
+	  collection.manifests.splice(action.manifestIndex, 1);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+	  };
     case 'SET_SELECTED_CANVAS_ID':
       return Object.assign({}, state, {
         ...state,
@@ -314,6 +397,12 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         ...state,
         selectedManifestIndex: action.selectedManifestIndex,
+        error: undefined
+      });
+    case 'SET_SELECTED_COLLECTION_INDEX':
+      return Object.assign({}, state, {
+        ...state,
+        selectedCollectionIndex: action.selectedCollectionIndex,
         error: undefined
       });
     case 'REORDER_CANVASES':
@@ -375,6 +464,26 @@ export var manifestReducer = (state = stateDefaults, action) => {
       };
 
       var manifest = updatedManifestData.manifests[action.manifestIndex];
+      manifest['@id'] = action.manifestUri;
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+      };
+    case 'UPDATE_COLLECTION_MANIFEST_IN_COLLECTION':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+      var collections = updatedManifestData.collections[action.collectionIndex];
+	  var manifest = collections.manifests[action.manifestIndex];
+
       manifest['@id'] = action.manifestUri;
 
       // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
@@ -497,6 +606,46 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         error: undefined
       });
+    case 'SET_TREE_DATA':
+      return Object.assign({}, state, {
+        treeData: action.treeData
+      });
+	case 'ADD_COLLECTION_TREE_MANIFEST':
+      // make a copy of the tree data to update
+      var updatedTreeData = {
+        ...state.treeData
+      };
+
+//      var flatTree = getFlatDataFromTree(updatedTreeData, keyFromKey);
+
+//	  updatedTreeData = addNodeUnderParent({treeData: updatedTreeData, 
+//		  parentKey: 1,
+//		  newNode: { title: 'Added Manifest' },
+//		  getNodeKey: keyFromTreeIndex});
+		  //
+	  updatedTreeData[0].children[0].children.push({title: 'New Manifest',
+			  expanded: true, key: 5, type: 'manifest'});
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+		treeData: [updatedTreeData[0]]
+	  };
+	case 'ADD_COLLECTION_TREE_COLLECTION':
+      // make a copy of the tree data to update
+      var updatedTreeData = {
+        ...state.treeData
+      };
+
+
+	  updatedTreeData[0].children[1].children.push({title: 'New Collection',
+			  expanded: true, key: 6, type: 'collection'});
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+		treeData: [updatedTreeData[0]]
+	  };
     default:
       return state;
   }

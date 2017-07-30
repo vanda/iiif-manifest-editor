@@ -22,29 +22,18 @@ var NewCollection = React.createClass({
       "license": "https://creativecommons.org/licenses/by/3.0/",
       "attribution": "[Click to edit attribution]",
       "collections": [
-  	 {
-          "@id": "http://" + uuid(),
-          "@type": "sc:Collection",
-          "label": [
-            {
-              "@value": "Sub Collection",
-              "@language": "en"
-            }
-          ],
-          "members": [
-  		  {
-                     "@id": "http://" + uuid(),
-                     "@type": "sc:Manifest",
-                     "label": [
-                        {
-                           "@value": "Normal Manifest",
-                           "@language": "en"
-                        }
-                        ]
-                  }
-  	  ],
-        }
-      ],
+		  {
+			  "@id": "http://example.org/" + uuidv4(),
+			  "@type": "sc:Collection",
+			  "label": "Unnamed Collection",
+			     "manifests": [ {
+						"@id": "http://example.org/" + uuidv4(),
+						"@type": "sc:Manifest",
+						"label": "[Click to edit label]",
+					}
+			     ]
+			  }
+	  ],
       "manifests": [
           {
              "@id": "http://example.org/" + uuidv4(),

@@ -14,6 +14,7 @@ var stateDefaults = {
   metadataFieldValue: undefined,
   selectedManifestIndex: undefined,
   selectedManifestId: undefined,
+  selectedCollectionIndex: undefined,
   selectedCanvasId: undefined,
   error: undefined,
   showMetadataSidebar: true,

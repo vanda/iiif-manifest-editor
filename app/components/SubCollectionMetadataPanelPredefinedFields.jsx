@@ -64,9 +64,10 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     return availableMetadataFieldIndex;
   },
   getActiveMetadataFieldIndexByFieldName: function(activeMetadataFields, fieldName) {
+	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
     var activeMetadataFieldIndex = -1;
-    Object.keys(activeMetadataFields).map(function(index) {
-      var metadataField = activeMetadataFields[index];
+    Object.keys(activeMetadataFields[selectedCollectionIndex]).map(function(index) {
+      var metadataField = activeMetadataFields[selectedCollectionIndex][index];
       if(metadataField.name === fieldName) {
         activeMetadataFieldIndex = index;
       }
@@ -108,7 +109,7 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
 //      this.updateMetadataFieldLists('label', this.props.manifestoObject.collections[this.props.selectedCollectionIndex].getLabel(), availableMetadataFields, activeMetadataFields);
   //  if(this.props.manifestoObject.getLabel()) {  // description
     if(this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()) {  // label
-      this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel(), availableMetadataFields, activeMetadataFields);
+      this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()[0].value, availableMetadataFields, activeMetadataFields);
     }
     if(this.props.manifestoObject.getDescription()) {  // description
       this.updateMetadataFieldLists('description', this.props.manifestoObject.getDescription(), availableMetadataFields, activeMetadataFields);
@@ -138,7 +139,7 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     var activeMetadataFields = [...this.state.activeMetadataFields];
 
     if(manifestData.collections.length > availableMetadataFields.length) {
-		availableMetadataFields.push(
+		activeMetadataFields.push(
 	    [{
           name: 'label',
           label: 'Label',
@@ -176,9 +177,9 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
           updatePath: 'logo'
         }]);
 
-		activeMetadataFields.push([]);
+		availableMetadataFields.push([]);
+
 		var collection = this.props.manifestoObject.getCollections()[selectedCollectionIndex];
-        this.updateMetadataFieldLists('label', collection.getLabel(), availableMetadataFields, activeMetadataFields);
 
         this.setState({
            availableMetadataFields: availableMetadataFields,
@@ -210,7 +211,14 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
   updateMetadataFieldValue: function(fieldValue, path, fieldName) {
     // update the metadata field value to the collection data object in the store
     if(fieldName !== undefined) {
+	  var availableMetadataFields = [...this.state.availableMetadataFields];
+	  var activeMetadataFields = [...this.state.activeMetadataFields];
+
+	  var activeMetadataFieldIndex = this.getActiveMetadataFieldIndexByFieldName(activeMetadataFields, fieldName);
+      this.updateMetadataFieldLists(fieldName, fieldValue, availableMetadataFields, activeMetadataFields);
+
 	  var collectionPath = `collections/${this.props.selectedCollectionIndex}/${path}`;
+
       this.props.dispatch(actions.updateMetadataFieldValueAtPath(fieldValue, collectionPath));
     }
   },

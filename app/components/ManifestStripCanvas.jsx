@@ -5,7 +5,7 @@ var actions = require('actions');
 var manifesto = require('manifesto.js');
 var uuidv4 = require('uuid/v4');
 var Utils = require('Utils');
-var axios = require('axios');
+const cachios = require('cachios');
 import LazyLoad from 'react-lazy-load';
 import Async from 'react-promise'
 
@@ -72,7 +72,7 @@ var ManifestStripCanvas = React.createClass({
   },
   getMainImage: function(manifest) {
 	 if(manifest.id.substr(0,19) !== 'http://example.org/') {
-           return axios.get(manifest.id).then(function(response) {
+           return cachios.get(manifest.id, { ttl: 300 }).then(function(response) {
               var data = response.data;
 		      if('thumbnail' in data) {
                 return data.thumbnail;

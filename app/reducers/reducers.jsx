@@ -431,6 +431,50 @@ export var manifestReducer = (state = stateDefaults, action) => {
         manifestoObject: updatedManifestoObject,
         manifestData: updatedManifestData
       };
+    case 'MOVE_COLLECTION':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+	  var movingCollection = updatedCollectionData.collections.splice(action.currentCollectionIndex, 1);
+
+      updatedManifestData.collections.splice(action.newCollectionIndex, 0, movingCollection);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+      };
+    case 'REORDER_COLLECTIONS':
+      // make a copy of the manifest data to update
+      var updatedManifestData = {
+        ...state.manifestData
+      };
+
+      // reorder collections in sequence according to updatedSortOrder
+      function updateSortOrder(arr, sortArr) {
+        var result = [];
+        for(var i = 0; i < arr.length; i++) {
+          result[i] = arr[sortArr[i]];
+        }
+        return result;
+      }
+      updatedManifestData.collections = updateSortOrder(state.manifestData.collections, action.updatedSortOrder);
+
+      // update the manifesto object with the updated manifest data by re-creating the entire manifesto object
+      var updatedManifestoObject = manifesto.create(JSON.stringify(updatedManifestData));
+
+      // return the updated manifest data with the original state variables
+      return {
+        ...state,
+        manifestoObject: updatedManifestoObject,
+        manifestData: updatedManifestData
+      };
     case 'REVERSE_SEQUENCE':
       // make a copy of the manifest data to update
       var updatedManifestData = {

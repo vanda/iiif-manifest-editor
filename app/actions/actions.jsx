@@ -201,6 +201,21 @@ export var reorderManifests = (updatedSortOrder) => {
   }
 };
 
+export var reorderCollections = (updatedSortOrder) => {
+  return {
+    type: 'REORDER_COLLECTIONS',
+    updatedSortOrder
+  }
+};
+
+export var moveCollection = (currentCollectionIndex, newCollectionIndex) => {
+  return {
+    type: 'MOVE_COLLECTION',
+    currentCollectionIndex,
+	newCollectionIndex
+  }
+};
+
 export var reverseSequence = () => {
   return {
     type: 'REVERSE_SEQUENCE'

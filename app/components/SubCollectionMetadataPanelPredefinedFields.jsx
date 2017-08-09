@@ -106,9 +106,53 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     var numUniqueMetadataFields =  availableMetadataFields[selectedCollectionIndex].filter(function(field) { return !field.isUnique }).length;
     var numMultiValuedMetadataFields = availableMetadataFields[selectedCollectionIndex].filter(function(field) { return field.isUnique }).length;
 
-//      this.updateMetadataFieldLists('label', this.props.manifestoObject.collections[this.props.selectedCollectionIndex].getLabel(), availableMetadataFields, activeMetadataFields);
-  //  if(this.props.manifestoObject.getLabel()) {  // description
-    if(this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()) {  // label
+	if(this.props.manifestoObject.getCollections().length > 1) {
+	  for(var newColls = 0; newColls < this.props.manifestoObject.getCollections().length; newColls++) {
+	     availableMetadataFields.push(
+	     [{
+          name: 'label',
+          label: 'Label',
+          value: undefined,
+          isRequired: true,
+          isUnique: true,
+          addPath: '',
+          updatePath: 'label'
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          value: undefined,
+          isRequired: false,
+          isUnique: true,
+          addPath: '',
+          updatePath: 'description'
+        },
+        {
+          name: 'license',
+          label: 'License',
+          value: undefined,
+          isRequired: false,
+          isUnique: true,
+          addPath: '',
+          updatePath: 'license'
+        },
+        {
+          name: 'logo',
+          label: 'Logo',
+          value: undefined,
+          isRequired: false,
+          isUnique: true,
+          addPath: '',
+          updatePath: 'logo'
+        }]);
+
+	  }
+	}
+
+    for(var collIndex = 0; collIndex < this.props.manifestoObject.getCollections().length; collIndex++) {
+		this.props.selectedCollectionIndex = collIndex;
+		  //
+    if(this.props.manifestoObject.getCollections()[collIndex].getLabel()) {  // label
       this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()[0].value, availableMetadataFields, activeMetadataFields);
     }
     if(this.props.manifestoObject.getDescription()) {  // description
@@ -124,6 +168,8 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     // update the metadata field lists in the state so that the component uses the correct values when rendering
     this.state.numUniqueMetadataFields[selectedCollectionIndex] = numUniqueMetadataFields;
     this.state.numUnassignedMetadataFields[selectedCollectionIndex] = 0;
+
+	}
 
     this.setState({
       numMultiValuedMetadataFields,

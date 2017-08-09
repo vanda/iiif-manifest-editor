@@ -132,6 +132,10 @@ var CollectionStripCanvas = React.createClass({
       isOver: false
     });
   },
+  handleDragStart: function(e) {
+	var {manifestoObject, collectionIndex} = this.props;
+	e.dataTransfer.setData("text/plain", JSON.stringify(collectionIndex));
+  },
   setCollectionContainerClass: function() {
     return this.state.isOver ? "thumbnail-strip-collection-container selected-drop-target-collection" : "thumbnail-strip-collection-container";
   },
@@ -157,7 +161,7 @@ var CollectionStripCanvas = React.createClass({
     collectionStyle.width = this.getThumbnailCollectionWidth(collection) + 'px';
 
     return (
-      <div className={this.setCollectionContainerClass()} data-collection-index={this.props.collectionIndex} onDragOver={this.handleDragOver} onDragLeave={this.handleDragLeave}>
+      <div className={this.setCollectionContainerClass()} data-collection-index={this.props.collectionIndex} onDragOver={this.handleDragOver} onDragLeave={this.handleDragLeave} onDragStart={this.handleDragStart}>
         <a className="delete-collection-button btn btn-danger btn-xs btn-transparent" onClick={this.openDeleteCollectionConfirmationDialog} title="Remove Collection"><i className="fa fa-trash"></i></a>
         <span className="collection-menu-options dropdown">
           <a className="btn btn-default btn-xs btn-transparent dropdown-toggle" data-toggle="dropdown" title="Show Collection Options"><i className="fa fa-bars"></i></a>

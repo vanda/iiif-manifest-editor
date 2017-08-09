@@ -99,10 +99,8 @@ var CollectionStrip = React.createClass({
     // raw collection data is being passed as a JSON string
     var rawCollectionData = e.dataTransfer.getData('text/plain');
     if(rawCollectionData !== '') {
-      var collections = JSON.parse(rawCollectionData);
-      for(var collectionIndex = collections.length-1; collectionIndex >= 0; collectionIndex--) {
-        this.props.dispatch(actions.addCollectionAtIndex(collections[collectionIndex], insertIndex));
-      }
+      var curCollectionIndex = JSON.parse(rawCollectionData);
+	  this.props.dispatch(actions.moveCollection(curCollectionIndex, insertIndex));
     }
 
     // some browsers require a return false for handling drop events

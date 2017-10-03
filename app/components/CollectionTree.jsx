@@ -40,10 +40,10 @@ export default class CollectionTree extends Component {
     }
 }
 
-module.exports = connect(
-	(state) => {
-		return {
-			treeData: state.manifestReducer.treeData
-		};
-	}
-)(CollectionTree);
+//module.exports = connect(
+//	(state) => {
+//		return {
+//			treeData: state.manifestReducer.treeData
+//		};
+//	}
+//)(CollectionTree);

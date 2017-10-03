@@ -18,7 +18,7 @@ var stateDefaults = {
   selectedCanvasId: undefined,
   error: undefined,
   showMetadataSidebar: true,
-  treeData: undefined
+  treeData: []
 }
 
 const keyFromTreeIndex = ({ treeIndex }) => treeIndex;

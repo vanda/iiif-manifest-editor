@@ -70,8 +70,6 @@ var CollectionManifestMetadataPanel = React.createClass({
     var that = this;
     // check if the entered URI is a valid IIIF Image API URI; if not, check if it redirects to one
     if(this.isIiifManifestUri(manifestUri)) {
-      var infoJsonUri = this.getInfoJsonFromImageUri(imageUri);
-      this.createImageAnnotationFromInfoJsonUri(infoJsonUri);
        axios.get(manifestUri)
         .then(function(response) {
 		   if(selectedCollectionIndex == undefined) {

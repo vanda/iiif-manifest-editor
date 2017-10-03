@@ -121,9 +121,10 @@ var Viewer = React.createClass({
   },
   render: function() {
     var manifest = this.props.manifestoObject;
+	var selectedCanvasId = this.props.selectedCanvasId;
     var sequence = manifest.getSequenceByIndex(0);
     var sequenceLength = sequence.getCanvases().length;
-    var canvas = this.props.manifestoObject.getSequenceByIndex(0).getCanvasById(this.props.selectedCanvasId);
+    var canvas = selectedCanvasId ? this.props.manifestoObject.getSequenceByIndex(0).getCanvasById(selectedCanvasId) : null;
     var canvasIndex = canvas !== null ? sequence.getCanvasIndexById(canvas.id) : 0;
     var canvasLabelPath = "sequences/0/canvases/" + canvasIndex + "/label";
     var openSeadragonConf = this.getOpenSeadragonConf();

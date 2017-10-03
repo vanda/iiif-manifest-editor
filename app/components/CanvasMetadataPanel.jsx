@@ -158,8 +158,9 @@ var CanvasMetadataPanel = React.createClass({
   },
   render: function() {
     var manifest = this.props.manifestoObject;
+	var selectedCanvasId = this.props.selectedCanvasId;
     var sequence = manifest.getSequenceByIndex(0);
-    var canvas = sequence.getCanvasById(this.props.selectedCanvasId);
+    var canvas = selectedCanvasId?sequence.getCanvasById(selectedCanvasId):null;
     if(canvas !== null) {
       var image = canvas.getImages()[0];
       var resource = image !== undefined ? image.__jsonld.resource : undefined;
@@ -167,6 +168,8 @@ var CanvasMetadataPanel = React.createClass({
       var canvasWidthPath = "sequences/0/canvases/" + sequence.getCanvasIndexById(canvas.id) + "/width";
       var canvasHeightPath = "sequences/0/canvases/" + sequence.getCanvasIndexById(canvas.id) + "/height";
       var canvasImageIdPath = "sequences/0/canvases/" + sequence.getCanvasIndexById(canvas.id) + "/images/0";
+	  var canvasHeight = canvas.getHeight() ? canvas.getHeight() : 0;
+	  var canvasWidth = canvas.getWidth() ? canvas.getWidth() : 0;
       return (
         <div className="metadata-sidebar-panel">
           <ImageAnnotationChoiceDialog ref="imageAnnotationDialog" onSubmitHandler={this.handleImageAnnotationChoice} canvas={canvas} addOrReplace={image !== undefined ? 'replace' : 'add'} />
@@ -188,13 +191,13 @@ var CanvasMetadataPanel = React.createClass({
           <dl>
             <dt className="metadata-field-label">Canvas Width</dt> 
             <dd className="metadata-field-value">
-              <EditableTextArea fieldName="canvasWidth" fieldValue={canvas.getWidth().toString()} path={canvasWidthPath} onUpdateHandler={this.saveMetadataFieldToStore}/>
+              <EditableTextArea fieldName="canvasWidth" fieldValue={canvasWidth.toString()} path={canvasWidthPath} onUpdateHandler={this.saveMetadataFieldToStore}/>
             </dd>
           </dl>
           <dl>
             <dt className="metadata-field-label">Canvas Height</dt> 
             <dd className="metadata-field-value">
-              <EditableTextArea fieldName="canvasHeight" fieldValue={canvas.getHeight().toString()} path={canvasHeightPath} onUpdateHandler={this.saveMetadataFieldToStore}/>
+              <EditableTextArea fieldName="canvasHeight" fieldValue={canvasHeight.toString()} path={canvasHeightPath} onUpdateHandler={this.saveMetadataFieldToStore}/>
             </dd>
           </dl>
           <dl>

@@ -19,8 +19,8 @@ var CollectionMetadataAccordion = React.createClass({
     }
   },
   setMetadataPanelClasses: function(panelName) {
-    if((panelName === 'manifestMetadata' && window.location.hash.startsWith('#/edit?')) ||
-       (panelName === 'canvasMetadata' && window.location.hash.startsWith('#/canvases?'))) {
+    if((panelName === 'manifestMetadata' && window.location.hash.startsWith('#/manifest/edit?')) ||
+       (panelName === 'canvasMetadata' && window.location.hash.startsWith('#/manifest/canvases?'))) {
       return "panel-collapse collapse in";
     } else {
       return "panel-collapse collapse";

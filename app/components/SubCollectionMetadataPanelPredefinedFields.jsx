@@ -150,8 +150,6 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
 	}
 
     for(var collIndex = 0; collIndex < this.props.manifestoObject.getCollections().length; collIndex++) {
-		this.props.selectedCollectionIndex = collIndex;
-		  //
     if(this.props.manifestoObject.getCollections()[collIndex].getLabel()) {  // label
       this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()[0].value, availableMetadataFields, activeMetadataFields);
     }

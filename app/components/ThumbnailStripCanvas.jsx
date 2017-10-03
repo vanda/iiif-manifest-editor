@@ -120,7 +120,7 @@ var ThumbnailStripCanvas = React.createClass({
     }
   },
   openImportCanvasesView: function() {
-    window.location = '#/canvases';
+    window.location = '#/manifest/canvases';
   },
   stringTruncate: function(str, maxLength) {
     return str.length > maxLength ? str.substring(0, maxLength - 1) + '…' : str;

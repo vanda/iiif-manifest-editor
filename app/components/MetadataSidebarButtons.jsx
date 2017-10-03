@@ -57,21 +57,21 @@ var MetadataSidebarButtons = React.createClass({
           <span className="metadata-sidebar-buttons">
             <button onClick={this.openSaveManifestDialog} className="btn btn-default metadata-sidebar-button"><i className="fa fa-download hidden-sm hidden-xs"></i> Save Manifest</button>
             {(() => {
-              if(window.location.hash.startsWith('#/edit?')) {
+              if(window.location.hash.startsWith('#/manifest/edit?')) {
                 return (
                   <span className="manifest-actions-menu dropdown">
                     <button className="btn btn-default btn-transparent dropdown-toggle" data-toggle="dropdown" title="Show Manifest Actions"><i className="fa fa-caret-down hidden-sm hidden-xs"></i> Manifest Actions</button>
                     <ul className="dropdown-menu pull-left">
                       <li onClick={() => this.openExitConfirmationDialog('#/new')}><i className="fa fa-file hidden-sm hidden-xs"></i> New Manifest</li>
                       <li onClick={() => this.openExitConfirmationDialog('#/open')}><i className="fa fa-folder-open hidden-sm hidden-xs"></i> Open Manifest</li>
-                      <li onClick={() => this.switchToView('#/canvases')}><i className="fa fa-picture-o hidden-sm hidden-xs"></i> Import Canvases</li>
+                      <li onClick={() => this.switchToView('#/manifest/canvases')}><i className="fa fa-picture-o hidden-sm hidden-xs"></i> Import Canvases</li>
                       <li onClick={() => this.openExitConfirmationDialog('#/')}><i className="fa fa-close hidden-sm hidden-xs"></i> Close Manifest</li>
                     </ul>
                   </span>
                 );
               } else {
                 return (
-                  <button onClick={() => this.switchToView('#/edit')} className="btn btn-default metadata-sidebar-button"><i className="fa fa-sign-out fa-flip-horizontal hidden-sm hidden-xs"></i> Return to Edit Manifest</button>
+                  <button onClick={() => this.switchToView('#/manifest/edit')} className="btn btn-default metadata-sidebar-button"><i className="fa fa-sign-out fa-flip-horizontal hidden-sm hidden-xs"></i> Return to Edit Manifest</button>
                 );
               }
             })()}
@@ -80,7 +80,7 @@ var MetadataSidebarButtons = React.createClass({
           </span>
         </div>
         {(() => {
-          if(window.location.hash.startsWith('#/canvases?')) {
+          if(window.location.hash.startsWith('#/manifest/canvases?')) {
             return (
               <div className="row">
                 <div className="open-sequence-button">

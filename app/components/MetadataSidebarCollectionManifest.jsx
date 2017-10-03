@@ -16,12 +16,12 @@ var MetadataSidebarCollectionManifest = React.createClass({
          } else {
            var collectionManifestoObject = manifesto.create(JSON.stringify(data));
            var canvas = collectionManifestoObject.getSequenceByIndex(0).getCanvasByIndex(0);
-           var img = canvas.getImages().length > 0 ? canvas.getCanonicalImageUri(150) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150';
+           var img = canvas.getImages().length > 0 ? canvas.getCanonicalImageUri(150) : 'https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150';
            return img;
          }
        });
     } else {
-      return Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Canvas&w=100&h=150');
+      return Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=20&txt=Empty+Manifest&w=100&h=150');
     }
   },
   render: function() {

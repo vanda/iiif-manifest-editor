@@ -31,7 +31,7 @@ var ManifestChoiceDialog = React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    this.props.onSubmitHandler(this.state.selectedMethod, this.refs.uri.value);
+    this.props.onSubmitHandler(this.refs.uri.value);
     this.refs.uri.value = '';
     // close modal window
     var $imageAnnotationChoiceDialog = $(ReactDOM.findDOMNode(this));

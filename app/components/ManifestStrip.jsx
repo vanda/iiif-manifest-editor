@@ -75,7 +75,7 @@ var ManifestStrip = React.createClass({
           "attribution": "[Click to edit attribution]",
           "sequences": [
                   {
-          "@id": "http://" + uuid(),
+          "@id": "http://" + uuidv4(),
           "@type": "sc:Sequence",
           "label": [
             {

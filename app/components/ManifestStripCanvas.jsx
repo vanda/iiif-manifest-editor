@@ -75,7 +75,7 @@ var ManifestStripCanvas = React.createClass({
            return cachios.get(manifest.id, { ttl: 300 }).then(function(response) {
               var data = response.data;
 		      if('thumbnail' in data) {
-                return data.thumbnail;
+                return data.thumbnail["@id"];
 			  } else {
 				var collectionManifestoObject = manifesto.create(JSON.stringify(data));
 				var canvas = collectionManifestoObject.getSequenceByIndex(0).getCanvasByIndex(0);

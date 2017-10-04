@@ -12,7 +12,7 @@ var MetadataSidebarCollectionManifest = React.createClass({
        return axios.get(manifest.id).then(function(response) {
          var data = response.data;
          if('thumbnail' in data) {
-           return data.thumbnail;
+           return data.thumbnail["@id"];
          } else {
            var collectionManifestoObject = manifesto.create(JSON.stringify(data));
            var canvas = collectionManifestoObject.getSequenceByIndex(0).getCanvasByIndex(0);

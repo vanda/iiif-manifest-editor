@@ -105,7 +105,7 @@ var CollectionManifestMetadataPanel = React.createClass({
     if(manifests.length > 0) {
 	  var index = this.props.selectedManifestIndex || 0;
       var manifest = manifests[index];
-      var manifestLabelPath = "manifest/" + "0" + "/label";
+      var manifestLabelPath = "collections/" + selectedCollectionIndex + "/manifests/" + index + "/label";
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />

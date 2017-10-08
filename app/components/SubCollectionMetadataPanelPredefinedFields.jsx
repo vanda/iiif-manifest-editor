@@ -51,11 +51,10 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
       activeMetadataFields: [[]]
     }
   },
-  getAvailableMetadataFieldIndexByFieldName: function(availableMetadataFields, fieldName) {
-	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
+  getAvailableMetadataFieldIndexByFieldName: function(availableMetadataFields, fieldName, collIndex) {
     var availableMetadataFieldIndex = -1;
-    for(var fieldIndex = 0; fieldIndex < availableMetadataFields[selectedCollectionIndex].length; fieldIndex++) {
-      var metadataField = availableMetadataFields[selectedCollectionIndex][fieldIndex];
+    for(var fieldIndex = 0; fieldIndex < availableMetadataFields[collIndex].length; fieldIndex++) {
+      var metadataField = availableMetadataFields[collIndex][fieldIndex];
       if(metadataField.name === fieldName) {
         availableMetadataFieldIndex = fieldIndex;
         break;
@@ -63,36 +62,34 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     }
     return availableMetadataFieldIndex;
   },
-  getActiveMetadataFieldIndexByFieldName: function(activeMetadataFields, fieldName) {
-	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
+  getActiveMetadataFieldIndexByFieldName: function(activeMetadataFields, fieldName, collIndex) {
     var activeMetadataFieldIndex = -1;
-    Object.keys(activeMetadataFields[selectedCollectionIndex]).map(function(index) {
-      var metadataField = activeMetadataFields[selectedCollectionIndex][index];
+    Object.keys(activeMetadataFields[collIndex]).map(function(index) {
+      var metadataField = activeMetadataFields[collIndex][index];
       if(metadataField.name === fieldName) {
         activeMetadataFieldIndex = index;
       }
     });
     return activeMetadataFieldIndex;
   },
-  updateMetadataFieldLists: function(fieldName, fieldValue, availableMetadataFields, activeMetadataFields) {
+  updateMetadataFieldLists: function(fieldName, fieldValue, availableMetadataFields, activeMetadataFields, collIndex) {
     // find the available metadata field based on the field name
-	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
-    var availableMetadataFieldIndex = this.getAvailableMetadataFieldIndexByFieldName(availableMetadataFields, fieldName);
+    var availableMetadataFieldIndex = this.getAvailableMetadataFieldIndexByFieldName(availableMetadataFields, fieldName, collIndex);
     if(availableMetadataFieldIndex !== -1) {
       // append the metadata field to the list of active fields and update its value
-      var availableMetadataField = availableMetadataFields[selectedCollectionIndex][availableMetadataFieldIndex];
+      var availableMetadataField = availableMetadataFields[collIndex][availableMetadataFieldIndex];
       availableMetadataField.value = fieldValue;
-      activeMetadataFields[selectedCollectionIndex].push(availableMetadataField);
+      activeMetadataFields[collIndex].push(availableMetadataField);
 
       // delete the metadata field from the list of available fields if it is unique
       if(availableMetadataField.isUnique) {
-        availableMetadataFields[selectedCollectionIndex].splice(availableMetadataFieldIndex, 1);
+        availableMetadataFields[collIndex].splice(availableMetadataFieldIndex, 1);
       }
     } else {
       // find the active metadata field based on the field name and update its value
-      var activeMetadataFieldIndex = this.getActiveMetadataFieldIndexByFieldName(activeMetadataFields, fieldName);
+      var activeMetadataFieldIndex = this.getActiveMetadataFieldIndexByFieldName(activeMetadataFields, fieldName, collIndex);
       if(activeMetadataFieldIndex !== -1) {
-        var activeMetadataField = activeMetadataFields[selectedCollectionIndex][activeMetadataFieldIndex];
+        var activeMetadataField = activeMetadataFields[collIndex][activeMetadataFieldIndex];
         activeMetadataField.value = fieldValue;
       }
     }
@@ -146,26 +143,28 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
           updatePath: 'logo'
         }]);
 
+	    activeMetadataFields.push([]);
+
 	  }
 	}
 
     for(var collIndex = 0; collIndex < this.props.manifestoObject.getCollections().length; collIndex++) {
     if(this.props.manifestoObject.getCollections()[collIndex].getLabel()) {  // label
-      this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[selectedCollectionIndex].getLabel()[0].value, availableMetadataFields, activeMetadataFields);
+      this.updateMetadataFieldLists('label', this.props.manifestoObject.getCollections()[collIndex].getLabel()[0].value, availableMetadataFields, activeMetadataFields, collIndex);
     }
-    if(this.props.manifestoObject.getDescription()) {  // description
-      this.updateMetadataFieldLists('description', this.props.manifestoObject.getDescription(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getCollections()[collIndex].getDescription().length > 0) {  // description
+      this.updateMetadataFieldLists('description', this.props.manifestoObject.getCollections()[collIndex].getDescription()[0].value, availableMetadataFields, activeMetadataFields, collIndex);
     }
-    if(this.props.manifestoObject.getLicense()) {  // license
-      this.updateMetadataFieldLists('license', this.props.manifestoObject.getLicense(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getCollections()[collIndex].getLicense()) {  // license
+      this.updateMetadataFieldLists('license', this.props.manifestoObject.getCOllections()[collIndex].getLicense()[0].value, availableMetadataFields, activeMetadataFields, collIndex );
     }
-    if(this.props.manifestoObject.getLogo()) {  // logo
-      this.updateMetadataFieldLists('logo', this.props.manifestoObject.getLogo(), availableMetadataFields, activeMetadataFields);
+    if(this.props.manifestoObject.getCollections()[collIndex].getLogo()) {  // logo
+      this.updateMetadataFieldLists('logo', this.props.manifestoObject.getCollections()[collIndex].getLogo()[0].value, availableMetadataFields, activeMetadataFields, collIndex);
     }
 
     // update the metadata field lists in the state so that the component uses the correct values when rendering
-    this.state.numUniqueMetadataFields[selectedCollectionIndex] = numUniqueMetadataFields;
-    this.state.numUnassignedMetadataFields[selectedCollectionIndex] = 0;
+    this.state.numUniqueMetadataFields[collIndex] = numUniqueMetadataFields;
+    this.state.numUnassignedMetadataFields[collIndex] = 0;
 
 	}
 
@@ -257,11 +256,12 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     if(fieldName !== undefined) {
 	  var availableMetadataFields = [...this.state.availableMetadataFields];
 	  var activeMetadataFields = [...this.state.activeMetadataFields];
+	  var { selectedCollectionIndex } = this.props;
 
-	  var activeMetadataFieldIndex = this.getActiveMetadataFieldIndexByFieldName(activeMetadataFields, fieldName);
-      this.updateMetadataFieldLists(fieldName, fieldValue, availableMetadataFields, activeMetadataFields);
+	  var activeMetadataFieldIndex = this.getActiveMetadataFieldIndexByFieldName(activeMetadataFields, fieldName, selectedCollectionIndex);
+      this.updateMetadataFieldLists(fieldName, fieldValue, availableMetadataFields, activeMetadataFields, selectedCollectionIndex);
 
-	  var collectionPath = `collections/${this.props.selectedCollectionIndex}/${path}`;
+	  var collectionPath = `collections/${selectedCollectionIndex}/${path}`;
 
       this.props.dispatch(actions.updateMetadataFieldValueAtPath(fieldValue, collectionPath));
     }
@@ -310,7 +310,7 @@ var SubCollectionMetadataPanelPredefinedFields = React.createClass({
     activeMetadataFields[selectedCollectionIndex].splice(menuIndex, 1);
 
     // find the available metadata field based on the field name
-    var availableMetadataFieldIndex = this.getAvailableMetadataFieldIndexByFieldName(availableMetadataFields, selectedFieldName);
+    var availableMetadataFieldIndex = this.getAvailableMetadataFieldIndexByFieldName(availableMetadataFields, selectedFieldName, selectecCollectionIndex);
     var availableMetadataField = availableMetadataFields[selectedCollectionIndex][availableMetadataFieldIndex];
     availableMetadataField.value = 'N/A';
 

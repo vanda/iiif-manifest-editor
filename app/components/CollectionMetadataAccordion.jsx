@@ -65,6 +65,19 @@ var CollectionMetadataAccordion = React.createClass({
             </div>
           </div>
         </div>
+	  <div className="panel panel-default">
+          <div className="panel-heading">
+            <h4 className="panel-title">
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-topmanifest-metadata"><i className="fa fa-file-image-o"></i> Top Manifest Metadata</a>
+              <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('TopManifestMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
+            </h4>
+          </div>
+          <div id="collapse-topmanifest-metadata" className={this.setMetadataPanelClasses('manifestTopMetadata')}>
+            <div className="panel-body">
+              <CollectionManifestMetadataPanel/>
+            </div>
+          </div>
+        </div>
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">

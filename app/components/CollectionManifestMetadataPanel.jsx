@@ -94,9 +94,9 @@ var CollectionManifestMetadataPanel = React.createClass({
   },
   render: function() {
     var manifests;
-	var {selectedCollectionIndex} = this.props;
+	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
 	
-	if(selectedCollectionIndex == undefined) {
+	if(this.props.manifestsOnly == 1) {
 		manifests = this.props.manifestoObject.getManifests();
 	} else {
 		manifests = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests();
@@ -105,11 +105,16 @@ var CollectionManifestMetadataPanel = React.createClass({
     if(manifests.length > 0) {
 	  var index = this.props.selectedManifestIndex || 0;
       var manifest = manifests[index];
-      var manifestLabelPath = "collections/" + selectedCollectionIndex + "/manifests/" + index + "/label";
+      var manifestLabelPath;
+	  if(this.props.manifestsOnly == 1) {
+	    manifestLabelPath = "/manifests/" + index + "/label";
+	  } else {
+	    manifestLabelPath = "collections/" + selectedCollectionIndex + "/manifests/" + index + "/label";
+	  }
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />
-                  <MetadataSidebarCollectionManifest collectionIndex={selectedCollectionIndex} manifestIndex={index}/>
+                  <MetadataSidebarCollectionManifest collectionIndex={selectedCollectionIndex} manifestIndex={index} manifestsOnly={this.props.manifestsOnly}/>
 		  <div className="row">
 		       <div className="col-md-12">
 		          <button onClick={this.openManifestChoiceDialog} className="btn btn-default center-block add-replace-image-on-canvas-button"><i className={manifest !== undefined ? 'fa fa-refresh' : 'fa fa-plus-circle'}></i> {manifest !== undefined ? 'Replace Manifest' : 'Add Manifest'}</button>

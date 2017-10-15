@@ -26,7 +26,7 @@ var MetadataSidebarCollectionManifest = React.createClass({
   },
   render: function() {
 	var manifest;
-	if(this.props.collectionIndex == undefined) {
+	if(this.props.manifestsOnly == 1) {
       manifest = this.props.manifestoObject.getManifests()[this.props.manifestIndex];
 	} else {
       var collection = this.props.manifestoObject.getCollections()[this.props.collectionIndex];

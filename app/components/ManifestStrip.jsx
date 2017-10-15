@@ -89,16 +89,12 @@ var ManifestStrip = React.createClass({
           "structures": []
     };
 
-	if(selectedCollectionIndex == undefined) {
+	if(this.props.topLevel == true) {
 		targetManifestIndex = this.props.manifestoObject.getManifests().length;
+        this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
 	} else {
 		targetManifestIndex = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests().length;
-	}
-
-	if(this.props.selectedCollectionIndex == undefined) {
-      this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
-	} else {
-      this.props.dispatch(actions.addEmptyCollectionManifestAtIndex(emptyManifest, this.props.selectedCollectionIndex, targetManifestIndex));
+        this.props.dispatch(actions.addEmptyCollectionManifestAtIndex(emptyManifest, this.props.selectedCollectionIndex, targetManifestIndex));
 	}
   },
   addManifests: function(e) {

@@ -74,7 +74,7 @@ var CollectionMetadataAccordion = React.createClass({
           </div>
           <div id="collapse-topmanifest-metadata" className={this.setMetadataPanelClasses('manifestTopMetadata')}>
             <div className="panel-body">
-              <CollectionManifestMetadataPanel/>
+              <CollectionManifestMetadataPanel manifestsOnly={1} />
             </div>
           </div>
         </div>
@@ -94,13 +94,13 @@ var CollectionMetadataAccordion = React.createClass({
 	  <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">
-              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-collectionmanifest-metadata"><i className="fa fa-file-image-o"></i> Collection Manifest Metadata</a>
+              <a data-toggle="collapse" data-parent="#metadata-accordion" href="#collapse-collectionmanifest-metadata"><i className="fa fa-file-image-o"></i> Manifest Metadata</a>
               <a className="help-icon pull-right" href="javascript:;" onClick={() => this.showHelp('CollectionManifestMetadataPanel')} ><i className="fa fa-question-circle-o"></i></a>
             </h4>
           </div>
           <div id="collapse-collectionmanifest-metadata" className={this.setMetadataPanelClasses('canvasMetadata')}>
             <div className="panel-body">
-              <CollectionManifestMetadataPanel/>
+              <CollectionManifestMetadataPanel manifestsOnly={0} />
             </div>
           </div>
         </div>

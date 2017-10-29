@@ -66,13 +66,14 @@ var CollectionManifestMetadataPanel = React.createClass({
 	return true;
   },
   handleManifestUri: function(manifestUri) {
-    var {dispatch, selectedManifestIndex, selectedCollectionIndex} = this.props;
+    var {dispatch} = this.props;
+	var selectedTopManifestIndex = this.props.selectedTopManifestIndex || 0;
     var that = this;
     // check if the entered URI is a valid IIIF Image API URI; if not, check if it redirects to one
     if(this.isIiifManifestUri(manifestUri)) {
        axios.get(manifestUri)
         .then(function(response) {
-             dispatch(actions.updateCollectionManifestInCollection(selectedManifestIndex, selectedCollectionIndex, manifestUri));
+             dispatch(actions.updateManifestInCollection(selectedTopManifestIndex, manifestUri));
 		     dispatch(actions.addCollectionTreeManifest("New Label"));
 		});
     }
@@ -89,22 +90,20 @@ var CollectionManifestMetadataPanel = React.createClass({
   },
   render: function() {
     var manifests;
-	var selectedCollectionIndex = this.props.selectedCollectionIndex || 0;
 	
-	manifests = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests();
+	manifests = this.props.manifestoObject.getManifests();
 
     if(manifests.length > 0) {
-	  var selectedManifestIndex = this.props.selectedManifestIndex || 0;
-      var manifest = manifests[selectedManifestIndex];
+	  var index = this.props.selectedTopManifestIndex || 0;
+      var manifest = manifests[index];
       var manifestLabelPath;
 
-	  manifestLabelPath = "collections/" + selectedCollectionIndex + "/manifests/" + selectedManifestIndex + "/label";
+	  manifestLabelPath = "/manifests/" + index + "/label";
 
       return (
         <div className="metadata-sidebar-panel">
 		  <ManifestChoiceDialog ref="manifestDialog" onSubmitHandler={this.handleManifestChoice} manifest={manifest} addOrReplace={manifest !== undefined ? 'replace' : 'add'} />
-                  <MetadataSidebarCollectionManifest collectionIndex={selectedCollectionIndex} manifestIndex={selectedManifestIndex} manifestsOnly={0} />
-
+                  <MetadataSidebarCollectionManifest manifestIndex={index} manifestsOnly={1} />
 		  <div className="row">
 		       <div className="col-md-12">
 		          <button onClick={this.openManifestChoiceDialog} className="btn btn-default center-block add-replace-image-on-canvas-button"><i className={manifest !== undefined ? 'fa fa-refresh' : 'fa fa-plus-circle'}></i> {manifest !== undefined ? 'Replace Manifest' : 'Add Manifest'}</button>
@@ -123,13 +122,13 @@ var CollectionManifestMetadataPanel = React.createClass({
     } else if(manifests.length < 1) {
       return (
         <div>
-          This collection does not have any manifests.
+          This collection does not have any top level manifests.
         </div>
       );
     } else {
       return (
         <div>
-          The selected manifest has been deleted.
+          The selected top level manifest has been deleted.
         </div>
       );
     }
@@ -141,8 +140,7 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
-      selectedCollectionIndex: state.manifestReducer.selectedCollectionIndex,
+      selectedTopManifestIndex: state.manifestReducer.selectedTopManifestIndex,
       error: state.manifestReducer.error
     };
   }

@@ -180,6 +180,14 @@ export var setSelectedManifestIndex = (selectedManifestIndex) => {
   }
 };
 
+export var setSelectedTopManifestIndex = (selectedTopManifestIndex) => {
+  return {
+    type: 'SET_SELECTED_TOP_MANIFEST_INDEX',
+    selectedTopManifestIndex
+  }
+};
+
+
 export var setSelectedCollectionIndex = (selectedCollectionIndex) => {
   return {
     type: 'SET_SELECTED_COLLECTION_INDEX',

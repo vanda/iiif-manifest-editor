@@ -5,6 +5,7 @@ var classNames = require('classnames');
 var Viewer = require('Viewer');
 var CollectionMetadataSidebar = require('CollectionMetadataSidebar');
 var CollectionStrip = require('CollectionStrip');
+var TopManifestStrip = require('TopManifestStrip');
 var ManifestStrip = require('ManifestStrip');
 var ThumbnailStrip = require('ThumbnailStrip');
 
@@ -56,7 +57,7 @@ var EditCollection = React.createClass({
         <div className="edit-manifest-container container-fluid">
           <div className="row">
             <div className={viewerManifestStripClasses}>
-              <ManifestStrip topLevel={true} />
+              <TopManifestStrip/>
               <CollectionStrip/>
               <ManifestStrip noSelectedCollection={true}/>
             </div>

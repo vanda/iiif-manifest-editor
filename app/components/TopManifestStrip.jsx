@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var {connect} = require('react-redux');
 var actions = require('actions');
-var ManifestStripCanvas = require('ManifestStripCanvas');
+var TopManifestStripCanvas = require('TopManifestStripCanvas');
 var uuidv4 = require('uuid/v4');
 var {SortableItems, SortableItem} = require('react-sortable-component');
 var OnScreenHelp = require('OnScreenHelp');
@@ -58,7 +58,6 @@ var ManifestStrip = React.createClass({
   appendEmptyManifestToSequence: function() {
     // dispatch action to add empty manifest to end of sequence
     var targetManifestIndex;
-	var {selectedCollectionIndex} = this.props;
     var emptyManifest = {
       "@context": "http://iiif.io/api/presentation/2/context.json",
           "@id": "http://example.org/" + uuidv4(),
@@ -89,8 +88,8 @@ var ManifestStrip = React.createClass({
           "structures": []
     };
 
-	targetManifestIndex = this.props.manifestoObject.getCollections()[selectedCollectionIndex].getManifests().length;
-    this.props.dispatch(actions.addEmptyCollectionManifestAtIndex(emptyManifest, this.props.selectedCollectionIndex, targetManifestIndex));
+	targetManifestIndex = this.props.manifestoObject.getManifests().length;
+    this.props.dispatch(actions.addEmptyManifestAtIndex(emptyManifest, targetManifestIndex));
   },
   addManifests: function(e) {
     // stops browsers from redirecting
@@ -199,18 +198,7 @@ var ManifestStrip = React.createClass({
 
 	var manifests;
 
-	if(this.props.selectedCollectionIndex != undefined) {
-		var collection = this.props.manifestoObject.getCollections()[this.props.selectedCollectionIndex];
-		manifests = collection.getManifests();
-	} else if(this.props.noSelectedCollection == true) {
-			return (
-               <div className="thumbnail-strip-container"> 
-                    <div className="alert alert-danger">
-				       Select Collection First
-				    </div>
-			   </div>
-			);
-	}
+	manifests = this.props.manifestoObject.getManifests();
 
     return (
       <div className="thumbnail-strip-container" onDragOver={this.cancelDragOver} onDrop={this.addManifests}>
@@ -226,7 +214,7 @@ var ManifestStrip = React.createClass({
             manifests.map(function(manifest, manifestIndex) {
               return (
                 <SortableItem key={manifestIndex} draggable={true} className="simple-sort-item">
-                  <ManifestStripCanvas key={manifestIndex} manifestIndex={manifestIndex} manifestId={manifest.id} collectionIndex={_this.props.selectedCollectionIndex} isSelectedManifest={_this.isManifestSelected(manifestIndex)} topLevel={_this.props.topLevel} onManifestNormalClick={_this.deSelectManifests} onManifestShiftClick={_this.updateSelectedManifestIndexes} />
+                  <TopManifestStripCanvas key={manifestIndex} manifestIndex={manifestIndex} manifestId={manifest.id} isSelectedManifest={_this.isManifestSelected(manifestIndex)} onManifestNormalClick={_this.deSelectManifests} onManifestShiftClick={_this.updateSelectedManifestIndexes} />
                 </SortableItem>
               );
             })
@@ -245,8 +233,7 @@ module.exports = connect(
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
       manifestData: state.manifestReducer.manifestData,
-      selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
-      selectedCollectionIndex: state.manifestReducer.selectedCollectionIndex
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex
     };
   }
 )(ManifestStrip);

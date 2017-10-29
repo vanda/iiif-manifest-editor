@@ -49,12 +49,8 @@ var ManifestStripCanvas = React.createClass({
       this.props.onManifestNormalClick();
 
       // dispatch action to set the active manifest in the store
-      var {dispatch, manifestIndex, selectedCollectionIndex} = this.props;
-	  if (selectedCollectionIndex == undefined) {
-        dispatch(actions.setSelectedTopManifestIndex(manifestIndex));
-	  } else {
-        dispatch(actions.setSelectedManifestIndex(manifestIndex));
-	  }
+      var {dispatch, manifestIndex} = this.props;
+      dispatch(actions.setSelectedTopManifestIndex(manifestIndex));
     }
   },
   setActiveClass: function() {
@@ -131,14 +127,9 @@ var ManifestStripCanvas = React.createClass({
   },
   deleteManifest: function() {
     // dispatch an action to delete the manifest at the given index from the thumbnail strip
-    var {dispatch, manifestIndex, selectedCollectionIndex} = this.props;
-	if (selectedCollectionIndex == undefined) {
-      dispatch(actions.setSelectedManifestId(undefined));
-      dispatch(actions.deleteManifestAtIndex(manifestIndex));
-	} else {
-      dispatch(actions.setSelectedManifestId(undefined));
-      dispatch(actions.deleteCollectionManifestAtIndex(selectedcollectionIndex, manifestIndex));
-    }
+    var {dispatch, manifestIndex} = this.props;
+    dispatch(actions.setSelectedManifestId(undefined));
+    dispatch(actions.deleteManifestAtIndex(manifestIndex));
   },
   openDeleteManifestConfirmationDialog: function() {
     if(confirm('Are you sure you want to delete this manifest?')) {
@@ -177,11 +168,7 @@ var ManifestStripCanvas = React.createClass({
 
     var manifests;
 
-	if(this.props.topLevel == true || this.props.collectionIndex == undefined) {
-		manifests = this.props.manifestoObject.getManifests();
-	} else {
-		manifests = this.props.manifestoObject.getCollections()[this.props.collectionIndex].getManifests();
-	}
+	manifests = this.props.manifestoObject.getManifests();
     var manifest = manifests[this.props.manifestIndex];
 		  
 //    this.props.manifestoObject.getManifestByIndex(this.props.manifestId).then(function(data) {
@@ -231,8 +218,7 @@ module.exports = connect(
   (state) => {
     return {
       manifestoObject: state.manifestReducer.manifestoObject,
-      selectedManifestIndex: state.manifestReducer.selectedManifestIndex,
-      selectedCollectionIndex: state.manifestReducer.selectedCollectionIndex
+      selectedManifestIndex: state.manifestReducer.selectedManifestIndex
     };
   }
 )(ManifestStripCanvas);

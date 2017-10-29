@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var CollectionMetadataPanel = require('CollectionMetadataPanel');
 var SubCollectionMetadataPanel = require('SubCollectionMetadataPanel');
 var CollectionManifestMetadataPanel = require('CollectionManifestMetadataPanel');
+var TopManifestMetadataPanel = require('TopManifestMetadataPanel');
 var BulkActionsPanel = require('BulkActionsPanel');
 var OnScreenHelp = require('OnScreenHelp');
 var CollectionTree = require('CollectionTree');
@@ -74,7 +75,7 @@ var CollectionMetadataAccordion = React.createClass({
           </div>
           <div id="collapse-topmanifest-metadata" className={this.setMetadataPanelClasses('manifestTopMetadata')}>
             <div className="panel-body">
-              <CollectionManifestMetadataPanel manifestsOnly={1} />
+              <TopManifestMetadataPanel/>
             </div>
           </div>
         </div>
@@ -100,7 +101,7 @@ var CollectionMetadataAccordion = React.createClass({
           </div>
           <div id="collapse-collectionmanifest-metadata" className={this.setMetadataPanelClasses('canvasMetadata')}>
             <div className="panel-body">
-              <CollectionManifestMetadataPanel manifestsOnly={0} />
+              <CollectionManifestMetadataPanel/>
             </div>
           </div>
         </div>

@@ -394,6 +394,12 @@ export var manifestReducer = (state = stateDefaults, action) => {
         selectedManifestId: action.selectedManifestId,
         error: undefined
       });
+    case 'SET_SELECTED_TOP_MANIFEST_INDEX':
+      return Object.assign({}, state, {
+        ...state,
+        selectedTopManifestIndex: action.selectedTopManifestIndex,
+        error: undefined
+      });
     case 'SET_SELECTED_MANIFEST_INDEX':
       return Object.assign({}, state, {
         ...state,
@@ -404,6 +410,7 @@ export var manifestReducer = (state = stateDefaults, action) => {
       return Object.assign({}, state, {
         ...state,
         selectedCollectionIndex: action.selectedCollectionIndex,
+        selectedManifestIndex: 0,
         error: undefined
       });
     case 'REORDER_CANVASES':
